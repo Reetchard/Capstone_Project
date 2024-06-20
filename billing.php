@@ -1,97 +1,93 @@
-<?php 
- include 'config.php';
+<?php
+include "config.php";
 
- if(isset($_REQUEST["submit"])){
- $id = $_REQUEST["id"];
- $name = $_REQUEST["name"];
- $date = $_REQUEST["date"];
- $amount = $_REQUEST["amount"];
- 
-   $ins = "INSERT INTO billing (id,name,date,amount) VALUES('$id','$name','$date','$amount')";
-   $query = mysqli_query($connection,$ins);
-  }
- ?>
-<!DOTYPE html>
+if (isset($_REQUEST["submit"])) {
+    
+    $id = $_REQUEST["id"];
+    $name = $_REQUEST["name"];
+    $date = $_REQUEST["date"];
+    $amount = $_REQUEST["amount"];
+
+    
+
+    $ins = "INSERT INTO billing (id,name, date,amount) VALUES ('$id','$name','$date','$amount')";
+        $query1 = mysqli_query($connection, $ins);
+}
+?>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Biling - Gym Management System</title>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
 </head>
 <body>
     
-<!-- nav bar start-->
+<!-- nav bar start -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <!--<a class="navbar-brand" href="dashboard.php"><img src = "img/peak1.png" alt= "PeakPulse Logo"></a>-->
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
+  <a class="navbar-brand" href="admin-login.php"><img src="img/TT.png" alt=""></a>
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
       <li class="nav-item active">
-        <a class="nav-link" href="billing.php">Billing <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="#">Gym Mananagement System</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Gym profiling
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="gym-profiling.php">Reservation</a>
-          <a class="dropdown-item" href="booking.php">Booking</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="conflict-management.php">Conflict Management</a>
-        </div>
+        <a class="nav-link" href="coach.php">Trainer</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
+        <a class="nav-link" href="members.php">Members</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="membership.php">Membership</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="receptionist.php">Reservations</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="biling.php">Billing</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="biling.php">Reports</a>
       </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
   </div>
 </nav>
-<!-- nav bar end-->
+<!-- nav bar ends -->
+
 
 <!-- form start -->
 <form>
   <div class="form-row">
     <div class="form-group col-md-6">
-      <label for="inputEmail4">Billing ID</label>
-      <input type="text" name= "id"class="form-control" id="inputEmail4" placeholder="Billing ID">
+      <label for="inputEmail4">Member ID</label>
+      <input type="text" name="id" class="form-control" id="inputEmail4" placeholder="ID">
     </div>
     <div class="form-group col-md-6">
       <label for="inputPassword4">Member Name</label>
-      <input type="text" name= "name" class="form-control" id="inputPassword4" placeholder="Member Name">
+      <input type="text" name="name" class="form-control" id="inputPassword4" placeholder="Name">
     </div>
   </div>
   <div class="form-group">
-    <label for="inputAddress">Address</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="Address">
+    <label for="inputAddress">Billing Date</label>
+    <input type="text" name="date" class="form-control" id="inputAddress" placeholder="">
   </div>
   <div class="form-group">
-    <label for="inputAddress2">Billing Date</label>
-    <input type="text" name = "date"class="form-control" id="inputAddress2" placeholder="Billing Date">
+    <label for="inputAddress2">Amount</label>
+    <input type="text" name="amount"class="form-control" id="inputAddress2" placeholder="Amount">
   </div>
-  <div class="form-group">
-      <label for="inputCity">Amount</label>
-      <input type="text" name = "amount"class="form-control" id="inputCity" placeholder = "Amount">
-    </div>
-  <button type="submit" class="btn btn-primary">Confirm</button>
+  <button type="submit"  name= "submit" class="btn btn-primary">Save</button>
 </form>
+<!-- form end -->
 
-<!-- Form end-->
+
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 </body>
 </html>
-
