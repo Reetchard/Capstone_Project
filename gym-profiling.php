@@ -47,7 +47,7 @@ if (isset($_REQUEST["submit"])) {
         <a class="nav-link " href="membership.php">Membership</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link " href="receptionist.php">Reservations</a>
+        <a class="nav-link " href="reservation.php">Reservations</a>
       </li>
       <li class="nav-item">
         <a class="nav-link " href="biling.php">Billing</a>
