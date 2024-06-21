@@ -1,5 +1,4 @@
 <?php
-
 include "config.php";
 
 if (isset($_REQUEST["submit"])) {
@@ -7,32 +6,34 @@ if (isset($_REQUEST["submit"])) {
     $id = $_REQUEST["id"];
     $name = $_REQUEST["name"];
     $date = $_REQUEST["date"];
-    $dob = $_REQUEST["dob"];
+    $address = $_REQUEST["address"];
     $phone = $_REQUEST["phone"];
-    $coach = $_REQUEST["coach"];
+
     
 
-    $ins = "INSERT INTO member (id,name, date,dob,phone,coach) VALUES ('$id','$name','$date','$dob','$phone','$coach')";
+    $ins = "INSERT INTO receptionist (id,name, date,address,phone) VALUES ('$id','$name','$date','$address','$phone')";
         $query1 = mysqli_query($connection, $ins);
-}
 
+}       
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Document</title>
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
     
 
+
 <!-- nav bar start -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="admin-login.php"><img src="img/TT.png" alt="PeakPulse Logo"></a>
+  <a class="navbar-brand" href="admin-login.php"><img src="img/.png" alt="PeakPulse"></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -42,21 +43,27 @@ if (isset($_REQUEST["submit"])) {
         <a class="nav-link" href="#">Gym Management System</a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="trainer.php">Trainer</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="Billing.php">Billing</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="Coach.php">Coach</a>
+        <a class="nav-link" href="gym-profiling.php">Gym Profiling</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="members.php">Membership</a>
+        <a class="nav-link" href="members.php">Member</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="Receptionist.php">Reservations</a>
+        <a class="nav-link" href="reports.php">Reports</a>
       </li>
     </ul>
   </div>
 </nav>
 <!-- nav bar end     -->
+
+
+
 
 
 <!-- form start -->
@@ -72,20 +79,16 @@ if (isset($_REQUEST["submit"])) {
     </div>
   </div>
   <div class="form-group">
-    <label for="inputAddress">Date of Joining</label>
-    <input type="text" name="date" class="form-control" id="inputAddress" placeholder="Date of Birth">
+    <label for="inputAddress">Date of Birth</label>
+    <input type="text" name="date" class="form-control" id="inputAddress" placeholder="">
   </div>
   <div class="form-group">
-    <label for="inputAddress2">Date of Birth</label>
-    <input type="text" name="dob" class="form-control" id="inputAddress2" placeholder="date of  birth">
+    <label for="inputAddress2">Address</label>
+    <input type="text" name="address"class="form-control" id="inputAddress2" placeholder="Address">
   </div>
   <div class="form-group">
     <label for="inputAddress2">Phone</label>
-    <input type="text" name="phone" class="form-control" id="inputAddress2" placeholder="phone">
-  </div>
-  <div class="form-group">
-    <label for="inputAddress2">Coach</label>
-    <input type="text" name="coach" class="form-control" id="inputAddress2" placeholder="coach">
+    <input type="text" name="phone"class="form-control" id="inputAddress2" placeholder="Phone">
   </div>
   
   <button type="submit"  name= "submit" class="btn btn-primary">Save</button>

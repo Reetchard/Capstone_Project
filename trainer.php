@@ -41,19 +41,22 @@ if (isset($_REQUEST["submit"])) {
         <a class="nav-link" href="#">Gym Mananagement System</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="coach.php">Coach</a>
+        <a class="nav-link" href="trainer.php">Trainer</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="members.php">Members</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="membership.php">Membership</a>
+        <a class="nav-link " href="membership.php">Membership</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="receptionist.php">receptionist</a>
+        <a class="nav-link " href="reservation.php">Reservation</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="biling.php">billing</a>
+        <a class="nav-link " href="biling.php">Billing</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="reports.php">Reports</a>
       </li>
     </ul>
   </div>
