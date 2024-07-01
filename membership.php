@@ -48,6 +48,33 @@
             <h2 class="text-center">Member Registration</h2>
         </div>
         <div class="card-body">
+            <?php
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                // Include the database configuration file
+                include 'config.php';
+
+                // Retrieve form data
+                $id = $_POST['id'];
+                $name = $_POST['name'];
+                $date = $_POST['date'];
+                $dob = $_POST['dob'];
+                $phone = $_POST['phone'];
+                $coach = $_POST['coach'];
+
+                // Insert data into the database
+                $sql = "INSERT INTO membership (id, name, date, dob, phone, coach) VALUES ('$id', '$name', '$date', '$dob', '$phone', '$coach')";
+
+                if ($conn->query($sql) === TRUE) {
+                    echo "<div class='alert alert-success'>Member registered successfully</div>";
+                } else {
+                    echo "<div class='alert alert-danger'>Error: " . $sql . "<br>" . $conn->error . "</div>";
+                }
+
+                // Close the database connection
+                $conn->close();
+            }
+            ?>
+
             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -83,7 +110,7 @@
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7H UibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 </body>

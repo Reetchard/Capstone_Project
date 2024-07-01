@@ -1,17 +1,3 @@
-<?php
-include "config.php";
-
-if (isset($_REQUEST["submit"])) {
-    $id = $_REQUEST["id"];
-    $name = $_REQUEST["name"];
-    $date = $_REQUEST["date"];
-    $experience = $_REQUEST["experience"];
-
-    $ins = "INSERT INTO coach (id, name, date_of_birth, experience) VALUES ('$id', '$name', '$date', '$experience')";
-    $query1 = mysqli_query($connection, $ins);
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +42,7 @@ if (isset($_REQUEST["submit"])) {
 <div class="container mt-4">
     <div class="card">
         <div class="card-header">
-            <h2 class="text-center">Coach Registration</h2>
+            <h2 class="text-center">Trainer Registration</h2>
         </div>
         <div class="card-body">
             <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -67,7 +53,7 @@ if (isset($_REQUEST["submit"])) {
                     </div>
                     <div class="form-group col-md-6">
                         <label for="name">Name</label>
-                        <input type="text" name="name" class="form-control" id="name" placeholder="Enter Name" required>
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Enter Trainer Name" required>
                     </div>
                 </div>
                 <div class="form-group">
