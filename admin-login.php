@@ -31,6 +31,8 @@ if (isset($_POST ["submit"])){
     width: 100%;
     background: radial-gradient(#653d84, #332042);
     position: relative;
+    background: url(../Capstone/img/BG.png);
+    background: cover;
 }
 .login_box {
     width: 1050px;

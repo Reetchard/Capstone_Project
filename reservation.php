@@ -8,7 +8,38 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
-        /* Custom styles can be added here */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url(../Capstone/img/BG.png);
+            background-size: cover;
+        }
+
+        .navbar {
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease;
+            
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .search-card {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -28,13 +59,22 @@
                 <a class="nav-link" href="trainer.php">Trainer</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="billing.php">Billing</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="gym-profiling.php">Gym Profiling</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="member.php">Member</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Other
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="reservation.php">Reservation</a>
+                    <a class="dropdown-item" href="conflict-management.php">Conflict Management</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="billing.php">Billing</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="reports.php">Reports</a>
@@ -43,11 +83,11 @@
     </div>
 </nav>
 
-<!-- Receptionist Registration Form -->
-<div class="container mt-4">
+<!-- Receptionist Registration Form and Trainer Search -->
+<div class="container">
     <div class="card">
-        <div class="card-header">
-            Reservation  Registration Form
+        <div class="card-header" >
+            Reservation Registration Form
         </div>
         <div class="card-body">
             <form method="POST" action="receptionist.php" class="needs-validation" novalidate>
@@ -90,6 +130,49 @@
                 </div>
                 <button type="submit" name="submit" class="btn btn-primary">Save</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Search Trainer Form -->
+    <div class="card search-card">
+        <div class="card-header">
+            Search Trainer Availability
+        </div>
+        <div class="card-body">
+            <form method="POST" action="search-trainer.php">
+                <div class="form-group">
+                    <label for="searchName">Trainer Name</label>
+                    <input type="text" name="search_name" class="form-control" id="searchName" placeholder="Enter Trainer Name" required>
+                </div>
+                <button type="submit" name="search" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Trainer ID</th>
+                        <th>Trainer Name</th>
+                        <th>Available Date</th>
+                        <th>Available Until</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Example data, replace with dynamic data from your search query -->
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>10:00 AM</td>
+                        <td>12:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Jane Smith</td>
+                        <td>1:00 PM</td>
+                        <td>3:00 PM</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

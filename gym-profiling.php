@@ -18,40 +18,9 @@ if (isset($_REQUEST["submit"])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Billing - Gym Management System</title>
-    <link rel= "stylesheet" href = "style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <style>
-        /* Custom styles */
-        body {
-            padding: 20px;
-            background: url('../Capstone/img/BG.png') no-repeat center center fixed; /* Background image */
-            background-size: cover; /* Cover the entire page */
-            opacity: 0.9;
-
-        }
-        .card {
-            background-color: rgba(255, 255, 255, 0.0); /* Semi-transparent background */
-            margin-top: 50px;
-            padding: 20px;
-            box-shadow: 0 7px 9px rgba(0,0,0,0.1); /* Card shadow */
-            transition: box-shadow 0.5s ease;
-            
-        }
-        .card:hover {
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-        .btn-primary {
-            background-color: #007bff; /* Blue primary button */
-            border-color: #007bff;
-        }
-        .btn-primary:hover {
-            background-color: #0069d9; /* Darker blue on hover */
-            border-color: #0062cc;
-        }
-        .navbar {
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent navbar background */
-        }
-    </style>
+    <link rel = "stylesheet" href="style.css"> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+       
 </head>
 <body>
 
@@ -67,17 +36,30 @@ if (isset($_REQUEST["submit"])) {
                 <a class="nav-link" href="dashboard.php">Gym Management System</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="members.php">Members</a>
+                <a class="nav-link" href="member.php">Gym Members</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="trainer.php">Trainer</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="membership.php">Membership</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="reservation.php">Reservations</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Other
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="reservation.php">Reservation</a>
+                    <a class="dropdown-item" href="conflict-management.php">Conflict Management</a>
+                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="billing.php">Billing</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="reports.php">Report</a>
+            </li>
+            
         </ul>
     </div>
 </nav>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Billing - Gym Management System</title>
+    <title>Billing</title>
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -12,10 +12,12 @@
         body {
             padding: 20px;
             background-color: #f8f9fa;
+            background: url(../Capstone/img/BG.png);
+            background-size: cover;
         }
         .card {
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: box-shadow 0.3s ease;
+            transition: box-shadow 0.5s ease;
         }
         .card:hover {
             box-shadow: 0 8px 16px rgba(0,0,0,0.2);
@@ -50,13 +52,19 @@
                 <a class="nav-link" href="gym-profiling.php">Gym Profiling</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="member.php">Member</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="membership.php">Membership</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="conflict-management.php">Conflict Management</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="reservation.php">Reservations</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Other
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="reservation.php">Reservation</a>
+                    <a class="dropdown-item" href="conflict-management.php">Conflict Management</a>
+                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="reports.php">Reports</a>

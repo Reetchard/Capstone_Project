@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Form</title>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
         body {
             background-color: #f8f9fa; /* Bootstrap default background color */
+            background: url(../Capstone/img/BG.png);
             padding: 20px;
+            background-size: cover;
         }
         .container {
             max-width: 600px;
-            background-color: #fff;
+            background-color: #ffff;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -31,7 +34,45 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light bg-light fixed-top">
+    <a class="navbar-brand" href="admin-login.php"><img src="img/TT.png" alt="Logo"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="Dashboard.html">Gym Management System</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="gym-profiling.php">Gym Profiling</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="trainer.php">Trainer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="menber.php">Members</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="membership.php">Membership</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Other
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="reservation.php">Reservation</a>
+                    <a class="dropdown-item" href="conflict-management.php">Conflict Management</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="billing.php">Billing</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+    <div class="container" >
         <h2>Report Form</h2>
         <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">

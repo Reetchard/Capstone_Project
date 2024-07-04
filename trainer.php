@@ -20,13 +20,22 @@
                 <a class="nav-link" href="#">Gym Management System</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="gym-profiling.php">Gym Profiling</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="member.php">Members</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="membership.php">Membership</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="reservation.php">Reservations</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Other
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="reservation.php">Reservation</a>
+                    <a class="dropdown-item" href="conflict-management.php">Conflict Management</a>
+                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="billing.php">Billing</a>

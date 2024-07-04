@@ -1,84 +1,156 @@
+<?php
+include "config.php"; // Include your database connection file
+
+// Example resources array (replace with actual data fetching from database)
+$resources = [
+    ['id' => 1, 'name' => 'Resource 1'],
+    ['id' => 2, 'name' => 'Resource 2'],
+    ['id' => 3, 'name' => 'Resource 3']
+];
+
+// PHP code to handle form submission and conflict management
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+    // Validate and sanitize inputs (adjust as per your validation requirements)
+    $resource_id = isset($_POST['resource']) ? $_POST['resource'] : null;
+    $start_time = isset($_POST['start_time']) ? $_POST['start_time'] : null;
+    $end_time = isset($_POST['end_time']) ? $_POST['end_time'] : null;
+
+    if ($resource_id && $start_time && $end_time) {
+        // Validate time format (this is a basic check, adjust as per your requirements)
+        if (!isValidDateTime($start_time) || !isValidDateTime($end_time)) {
+            echo "<div class='alert alert-danger'>Invalid date/time format.</div>";
+        } else {
+            // Check availability
+            if (isAvailable($resource_id, $start_time, $end_time)) {
+                // Insert reservation into database (example)
+                $user_id = 1; // Replace with actual user ID (from session or login)
+                $insertQuery = "INSERT INTO reservations (resource_id, user_id, start_time, end_time)
+                                VALUES ('$resource_id', '$user_id', '$start_time', '$end_time')";
+
+                // Execute query (assuming you have a database connection)
+                // $conn->query($insertQuery); // Uncomment and replace with your database connection
+
+                echo "<div class='alert alert-success'>Reservation successful!</div>";
+            } else {
+                echo "<div class='alert alert-danger'>Sorry, the resource is not available at that time.</div>";
+            }
+        }
+    } else {
+        echo "<div class='alert alert-danger'>Please fill out all fields.</div>";
+    }
+}
+
+// Function to check if the resource is available for the given time range
+function isAvailable($resource_id, $start_time, $end_time) {
+    // Implement logic to check if the resource is available for the given time range
+    // Example: Check if there are any overlapping reservations
+    $conflictingReservations = []; // Replace with actual logic to fetch conflicting reservations
+
+    return empty($conflictingReservations); // Return true if no conflicts found
+}
+
+// Function to validate date/time format (basic validation, adjust as needed)
+function isValidDateTime($dateTime) {
+    return preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/', $dateTime);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservation Form</title>
+    <title>Reservation Form - Gym Management System</title>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        body {
+            background: url('../Capstone/img/BG.png') no-repeat center center fixed;
+            background-size: cover;
+            background-opacity: 0.8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            margin-top: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.8);
+            width: 100%;
+            max-width: 600px;
+        }
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
 <body>
-    <h2>Reservation Form</h2>
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-        <label for="resource">Select Resource:</label>
-        <select id="resource" name="resource" required>
-            <option value="">Select a resource</option>
-            <?php
-            // Example resources array (replace with actual data fetching from database)
-            $resources = [
-                ['id' => 1, 'name' => 'Resource 1'],
-                ['id' => 2, 'name' => 'Resource 2'],
-                ['id' => 3, 'name' => 'Resource 3']
-            ];
-            foreach ($resources as $resource) {
-                echo "<option value=\"{$resource['id']}\">{$resource['name']}</option>";
-            }
-            ?>
-        </select><br><br>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="admin-login.php"><img src="img/TT.png" alt="Logo"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="Dashboard.html">Gym Management System</a></li>
+                <li class="nav-item"><a class="nav-link" href="trainer.php">Trainer</a></li>
+                <li class="nav-item"><a class="nav-link" href="gym-profiling.php">Gym Profiling</a></li>
+                <li class="nav-item"><a class="nav-link" href="membership.php">Membership</a></li>
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Other
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="reservation.php">Reservation</a>
+                    <a class="dropdown-item" href="conflict-management.php">Conflict Management</a>
+                </div>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="billing.php">Billing</a></li>
+                <li class="nav-item"><a class="nav-link" href="reports.php">Reports</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!-- End Navigation Bar -->
 
-        <label for="start_time">Start Time:</label>
-        <input type="datetime-local" id="start_time" name="start_time" required><br><br>
+    <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center">
+                <h4>Reservation Form</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                    <div class="form-group">
+                        <label for="resource">Select Resource:</label>
+                        <select id="resource" name="resource" class="form-control" required>
+                            <option value="">Select a resource</option>
+                            <?php foreach ($resources as $resource) { ?>
+                                <option value="<?php echo $resource['id']; ?>"><?php echo $resource['name']; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="start_time">Start Time:</label>
+                        <input type="datetime-local" id="start_time" name="start_time" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_time">End Time:</label>
+                        <input type="datetime-local" id="end_time" name="end_time" class="form-control" required>
+                    </div>
+                    <button type="submit" name="submit" class="btn btn-primary btn-block">Reserve</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
-        <label for="end_time">End Time:</label>
-        <input type="datetime-local" id="end_time" name="end_time" required><br><br>
-
-        <input type="submit" name="submit" value="Reserve">
-    </form>
-
-    <?php
-    // PHP code to handle form submission and conflict management
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
-        // Validate and sanitize inputs (adjust as per your validation requirements)
-        $resource_id = isset($_POST['resource']) ? $_POST['resource'] : null;
-        $start_time = isset($_POST['start_time']) ? $_POST['start_time'] : null;
-        $end_time = isset($_POST['end_time']) ? $_POST['end_time'] : null;
-
-        if ($resource_id && $start_time && $end_time) {
-            // Validate time format (this is a basic check, adjust as per your requirements)
-            if (!isValidDateTime($start_time) || !isValidDateTime($end_time)) {
-                echo "<p>Invalid date/time format.</p>";
-            } else {
-                // Check availability
-                if (isAvailable($resource_id, $start_time, $end_time)) {
-                    // Insert reservation into database (example)
-                    $user_id = 1; // Replace with actual user ID (from session or login)
-                    $insertQuery = "INSERT INTO reservations (resource_id, user_id, start_time, end_time)
-                                    VALUES ('$resource_id', '$user_id', '$start_time', '$end_time')";
-
-                    // Execute query (assuming you have a database connection)
-                    // $conn->query($insertQuery); // Uncomment and replace with your database connection
-
-                    echo "<p>Reservation successful!</p>";
-                } else {
-                    echo "<p>Sorry, the resource is not available at that time.</p>";
-                }
-            }
-        } else {
-            echo "<p>Please fill out all fields.</p>";
-        }
-    }
-
-    // Function to check if the resource is available for the given time range
-    function isAvailable($resource_id, $start_time, $end_time) {
-        // Implement logic to check if the resource is available for the given time range
-        // Example: Check if there are any overlapping reservations
-        $conflictingReservations = []; // Replace with actual logic to fetch conflicting reservations
-
-        return empty($conflictingReservations); // Return true if no conflicts found
-    }
-
-    // Function to validate date/time format (basic validation, adjust as needed)
-    function isValidDateTime($dateTime) {
-        return preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/', $dateTime);
-    }
-    ?>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
