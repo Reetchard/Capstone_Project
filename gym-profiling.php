@@ -33,7 +33,7 @@ if (isset($_REQUEST["submit"])) {
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="dashboard.php">Gym Management System</a>
+                <a class="nav-link" href="Dashboard.html">Gym Management System</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="member.php">Gym Members</a>
