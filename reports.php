@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Form</title>
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
@@ -36,7 +35,7 @@
 <body>
     <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light bg-light fixed-top">
-    <a class="navbar-brand" href="admin-login.php"><img src="img/TT.png" alt="Logo"></a>
+    <a class="navbar-brand" href="admin-login.php"><img src="#" alt="Logo"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -52,7 +51,7 @@
                 <a class="nav-link" href="trainer.php">Trainer</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="menber.php">Members</a>
+                <a class="nav-link" href="member.php">Members</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="membership.php">Membership</a>
@@ -72,12 +71,16 @@
         </ul>
     </div>
 </nav>
-    <div class="container" >
+    <div class="container">
         <h2>Report Form</h2>
-        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+        <form id="ReportForm">
             <div class="form-group">
                 <label for="reporter_name">Your Name:</label>
-                <input type="text" class="form-control" id="reporter_name" name="reporter_name" required>
+                <input type="text" class="form-control" id="name" name="reporter_name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
             </div>
             <div class="form-group">
                 <label for="issue">Issue:</label>
@@ -85,30 +88,67 @@
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-
-        <?php
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Retrieve form data
-            $reporter_name = $_POST['reporter_name'];
-            $issue = $_POST['issue'];
-
-            // Example: save to a file (you might want to store in a database in a real application)
-            $filename = 'reports.txt';
-            $data = "Reporter Name: $reporter_name\nIssue:\n$issue\n\n";
-
-            // Append to file
-            if (file_put_contents($filename, $data, FILE_APPEND | LOCK_EX) !== false) {
-                echo '<div class="alert alert-success mt-3" role="alert">Report submitted successfully!</div>';
-            } else {
-                echo '<div class="alert alert-danger mt-3" role="alert">Failed to submit report.</div>';
-            }
-        }
-        ?>
+        <div id="alert"></div>
     </div>
-
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAPNGokBic6CFHzuuENDHdJrMEn6rSE92c",
+            authDomain: "capstone40-project.firebaseapp.com",
+            databaseURL: "https://capstone40-project-default-rtdb.firebaseio.com",
+            projectId: "capstone40-project",
+            storageBucket: "capstone40-project.appspot.com",
+            messagingSenderId: "399081968589",
+            appId: "1:399081968589:web:5b502a4ebf245e817aaa84",
+            measurementId: "G-CDP5BCS8EY"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Reference your database
+        var ReportFormDB = firebase.database().ref('ReportForm');
+
+        document.getElementById('ReportForm').addEventListener('submit', submitForm);
+
+        function submitForm(e) {
+            e.preventDefault();
+
+            var name = getElementVal('name');
+            var email = getElementVal('email');
+            var issue = getElementVal('issue');
+
+            console.log(name, email, issue);
+
+            saveMessages(name, email, issue);
+
+            // Show alert
+            document.getElementById('alert').innerHTML = '<div class="alert alert-success mt-3" role="alert">Report submitted successfully!</div>';
+
+            // Reset form
+            document.getElementById('ReportForm').reset();
+        }
+
+        const getElementVal = (id) => {
+            return document.getElementById(id).value;
+        }
+
+        const saveMessages = (name, email, issue) => {
+            var newReportForm = ReportFormDB.push();
+
+            newReportForm.set({
+                name: name,
+                email: email,
+                issue: issue
+            });
+        }
+    </script>
 </body>
 </html>

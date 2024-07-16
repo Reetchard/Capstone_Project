@@ -7,12 +7,6 @@ body {
     color: #333; /* Default text color */
     font-family: 'Arial', sans-serif; /* Default font family */
 }
-.navbar-nav .nav-item {
-    margin-right: 15px; /* Adjust the value as needed */
-}
 
-.navbar-nav .nav-item .dropdown{
-   text-decoration-color: blue; /* Adjust the value as needed */
-}
 
 

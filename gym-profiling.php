@@ -6,9 +6,13 @@ if (isset($_REQUEST["submit"])) {
     $name = $_REQUEST["name"];
     $date = $_REQUEST["date"];
     $experience = $_REQUEST["experience"];
+    $image = $_FILES['image']['name'];
+    $target = "img/" . basename($image);
 
-    $ins = "INSERT INTO coach (id,name, date,experience) VALUES ('$id','$name','$date','$experience')";
-    $query1 = mysqli_query($connection, $ins);
+    if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
+        $ins = "INSERT INTO coach (id,name,date,experience,image) VALUES ('$id','$name','$date','$experience','$target')";
+        $query1 = mysqli_query($connection, $ins);
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -17,15 +21,26 @@ if (isset($_REQUEST["submit"])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Billing - Gym Management System</title>
-    <link rel = "stylesheet" href="style.css"> 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-       
+    <title>Gym Management System</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        .nav-item {
+            margin-right: 15px;
+        }
+        .gym-id {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
 
 <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <a class="navbar-brand" href="admin-login.php"><img src="img/TT.png" alt="Logo"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -59,22 +74,22 @@ if (isset($_REQUEST["submit"])) {
             <li class="nav-item">
                 <a class="nav-link" href="reports.php">Report</a>
             </li>
-            
         </ul>
     </div>
 </nav>
 <!-- Navigation Bar ends -->
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+<div class="container mt-5 pt-5">
+    <div class="row">
+        <!-- Form Section -->
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header bg-primary text-white text-center">
                     <h4>Gym Profiling Registration</h4>
                 </div>
                 <div class="card-body">
                     <!-- Form start -->
-                    <form>
+                    <form id="gymForm" enctype="multipart/form-data">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="inputId">GYM ID</label>
@@ -93,18 +108,59 @@ if (isset($_REQUEST["submit"])) {
                             <label for="inputExperience">Experience</label>
                             <input type="text" name="experience" class="form-control" id="inputExperience" placeholder="Experience">
                         </div>
+                        <div class="form-group">
+                            <label for="inputImage">Upload Photo</label>
+                            <input type="file" name="image" class="form-control-file" id="inputImage">
+                        </div>
                         <button type="submit" name="submit" class="btn btn-primary btn-block">Save</button>
                     </form>
                     <!-- Form end -->
                 </div>
             </div>
         </div>
+
+        <!-- Result Section -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-secondary text-white text-center">
+                    <h4>Gym Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        
+                        <img src="img/gym_placeholder.jpg" class="img-fluid" alt="Gym Image" id="gymImage">
+                    </div>
+                    <h5 id="gymNameDisplay">Gym Name: </h5>
+                    <p id="gymIdDisplay">Gym ID: </p>
+                    <p id="gymDateDisplay">Date of Birth: </p>
+                    <p id="gymExperienceDisplay">Experience: </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+    document.getElementById('gymForm').addEventListener('submit', function(event) {
+        event.preventDefault();
 
+        const gymId = document.getElementById('inputId').value;
+        const gymName = document.getElementById('inputName').value;
+        const gymDate = document.getElementById('inputDate').value;
+        const gymExperience = document.getElementById('inputExperience').value;
+        const gymImage = document.getElementById('inputImage').files[0];
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('gymImage').src = e.target.result;
+        }
+        reader.readAsDataURL(gymImage);
+
+        document.getElementById('gymIdDisplay').innerText = 'GYM ID: ' + gymId;
+        document.getElementById('gymNameDisplay').innerText = 'Gym Name: ' + gymName;
+        document.getElementById('gymDateDisplay').innerText = 'Date of Birth: ' + gymDate;
+        document.getElementById('gymExperienceDisplay').innerText = 'Experience: ' + gymExperience;
+    });
+</script>
 </body>
 </html>
