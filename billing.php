@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Billing</title>
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <!-- Bootstrap CSS -->
@@ -105,6 +102,22 @@
                                 <input type="text" name="amount" class="form-control" id="amount" placeholder="Enter Amount" required>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="paymentMethod">Payment Method</label>
+                            <select name="paymentMethod" class="form-control" id="paymentMethod" required>
+                                <option value="">Select Payment Method</option>
+                                <option value="QR Code">QR Code</option>
+                                <option value="Payment Number">Payment Number</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="qrCodeUpload" style="display: none;">
+                            <label for="qrCode">Upload QR Code</label>
+                            <input type="file" name="qrCode" class="form-control-file" id="qrCode">
+                        </div>
+                        <div class="form-group" id="paymentNumberField" style="display: none;">
+                            <label for="paymentNumber">Payment Number</label>
+                            <input type="text" name="paymentNumber" class="form-control" id="paymentNumber" placeholder="Enter Payment Number">
+                        </div>
                         <button type="submit" class="btn btn-primary btn-block">Save</button>
                     </form>
                     <div id="alert"></div>
@@ -126,6 +139,7 @@
                                 <th>Member Name</th>
                                 <th>Billing Date</th>
                                 <th>Amount</th>
+                                <th>Payment Method</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -170,6 +184,22 @@
                             <input type="text" name="amount" class="form-control" id="edit-amount" required>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="edit-paymentMethod">Payment Method</label>
+                        <select name="paymentMethod" class="form-control" id="edit-paymentMethod" required>
+                            <option value="">Select Payment Method</option>
+                            <option value="QR Code">QR Code</option>
+                            <option value="Payment Number">Payment Number</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="edit-qrCodeUpload" style="display: none;">
+                        <label for="edit-qrCode">Upload QR Code</label>
+                        <input type="file" name="qrCode" class="form-control-file" id="edit-qrCode">
+                    </div>
+                    <div class="form-group" id="edit-paymentNumberField" style="display: none;">
+                        <label for="edit-paymentNumber">Payment Number</label>
+                        <input type="text" name="paymentNumber" class="form-control" id="edit-paymentNumber" placeholder="Enter Payment Number">
+                    </div>
                     <button type="submit" class="btn btn-primary btn-block">Update</button>
                 </form>
             </div>
@@ -189,15 +219,15 @@
 <script>
     // Your web app's Firebase configuration
     const firebaseConfig = {
-            apiKey: "AIzaSyAPNGokBic6CFHzuuENDHdJrMEn6rSE92c",
-            authDomain: "capstone40-project.firebaseapp.com",
-            databaseURL: "https://capstone40-project-default-rtdb.firebaseio.com",
-            projectId: "capstone40-project",
-            storageBucket: "capstone40-project.appspot.com",
-            messagingSenderId: "399081968589",
-            appId: "1:399081968589:web:5b502a4ebf245e817aaa84",
-            measurementId: "G-CDP5BCS8EY"
-        };
+        apiKey: "AIzaSyAPNGokBic6CFHzuuENDHdJrMEn6rSE92c",
+        authDomain: "capstone40-project.firebaseapp.com",
+        databaseURL: "https://capstone40-project-default-rtdb.firebaseio.com",
+        projectId: "capstone40-project",
+        storageBucket: "capstone40-project.appspot.com",
+        messagingSenderId: "399081968589",
+        appId: "1:399081968589:web:5b502a4ebf245e817aaa84",
+        measurementId: "G-CDP5BCS8EY"
+    };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
@@ -216,7 +246,7 @@
             for (const key in records) {
                 if (records.hasOwnProperty(key)) {
                     const record = records[key];
-                    renderBillingRecord(key, record.id, record.name, record.date, record.amount);
+                    renderBillingRecord(key, record.id, record.name, record.date, record.amount, record.paymentMethod, record.qrCode, record.paymentNumber);
                 }
             }
         });
@@ -226,7 +256,7 @@
     displayBillingRecords();
 
     // Function to render a billing record row
-    function renderBillingRecord(key, id, name, date, amount) {
+    function renderBillingRecord(key, id, name, date, amount, paymentMethod, qrCode, paymentNumber) {
         const recordsBody = document.getElementById('billingRecordsBody');
         const row = document.createElement('tr');
 
@@ -235,8 +265,9 @@
             <td>${name}</td>
             <td>${date}</td>
             <td>${amount}</td>
+            <td>${paymentMethod}</td>
             <td>
-                <button class="btn btn-warning btn-sm btn-space" onclick="editRecord('${key}', '${id}', '${name}', '${date}', '${amount}')">Edit</button>
+                <button class="btn btn-warning btn-sm btn-space" onclick="editRecord('${key}', '${id}', '${name}', '${date}', '${amount}', '${paymentMethod}', '${qrCode}', '${paymentNumber}')">Edit</button>
                 <button class="btn btn-danger btn-sm" onclick="deleteRecord('${key}')">Delete</button>
             </td>
         `;
@@ -244,13 +275,16 @@
     }
 
     // Function to save billing record
-    function saveBillingRecord(id, name, date, amount) {
+    function saveBillingRecord(id, name, date, amount, paymentMethod, qrCode, paymentNumber) {
         const newBillingRef = billingRef.push();
         newBillingRef.set({
             id: id,
             name: name,
             date: date,
-            amount: amount
+            amount: amount,
+            paymentMethod: paymentMethod,
+            qrCode: qrCode,
+            paymentNumber: paymentNumber
         }, function(error) {
             if (error) {
                 document.getElementById('alert').innerHTML = '<div class="alert alert-danger" role="alert">Error: ' + error.message + '</div>';
@@ -258,7 +292,7 @@
                 document.getElementById('alert').innerHTML = '<div class="alert alert-success" role="alert">Billing record saved successfully!</div>';
                 document.getElementById('billingForm').reset();
                 // After saving, render the new record in the table
-                renderBillingRecord(newBillingRef.key, id, name, date, amount);
+                renderBillingRecord(newBillingRef.key, id, name, date, amount, paymentMethod, qrCode, paymentNumber);
             }
         });
     }
@@ -271,62 +305,87 @@
         const name = document.getElementById('name').value;
         const date = document.getElementById('date').value;
         const amount = document.getElementById('amount').value;
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        const qrCode = document.getElementById('qrCode').files[0] ? document.getElementById('qrCode').files[0].name : '';
+        const paymentNumber = document.getElementById('paymentNumber').value;
 
-        saveBillingRecord(id, name, date, amount);
+        saveBillingRecord(id, name, date, amount, paymentMethod, qrCode, paymentNumber);
     });
 
     // Function to edit billing record
-            function editRecord(key, id, name, date, amount) {
-            document.getElementById('edit-record-id').value = key;
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-name').value = name;
-            document.getElementById('edit-date').value = date;
-            document.getElementById('edit-amount').value = amount;
+    function editRecord(key, id, name, date, amount, paymentMethod, qrCode, paymentNumber) {
+        document.getElementById('edit-record-id').value = key;
+        document.getElementById('edit-id').value = id;
+        document.getElementById('edit-name').value = name;
+        document.getElementById('edit-date').value = date;
+        document.getElementById('edit-amount').value = amount;
+        document.getElementById('edit-paymentMethod').value = paymentMethod;
+        document.getElementById('edit-qrCodeUpload').style.display = paymentMethod === 'QR Code' ? 'block' : 'none';
+        document.getElementById('edit-paymentNumberField').style.display = paymentMethod === 'Payment Number' ? 'block' : 'none';
 
-            $('#editModal').modal('show');
-        }
+        $('#editModal').modal('show');
+    }
 
-        // Event listener for edit billing form submission
-        document.getElementById('editBillingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+    // Event listener for edit billing form submission
+    document.getElementById('editBillingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
 
-            const key = document.getElementById('edit-record-id').value;
-            const id = document.getElementById('edit-id').value;
-            const name = document.getElementById('edit-name').value;
-            const date = document.getElementById('edit-date').value;
-            const amount = document.getElementById('edit-amount').value;
+        const key = document.getElementById('edit-record-id').value;
+        const id = document.getElementById('edit-id').value;
+        const name = document.getElementById('edit-name').value;
+        const date = document.getElementById('edit-date').value;
+        const amount = document.getElementById('edit-amount').value;
+        const paymentMethod = document.getElementById('edit-paymentMethod').value;
+        const qrCode = document.getElementById('edit-qrCode').files[0] ? document.getElementById('edit-qrCode').files[0].name : '';
+        const paymentNumber = document.getElementById('edit-paymentNumber').value;
 
-            const recordRef = billingRef.child(key);
-            recordRef.update({
-                id: id,
-                name: name,
-                date: date,
-                amount: amount
-            }, function(error) {
-                if (error) {
-                    alert('Error: ' + error.message);
-                } else {
-                    $('#editModal').modal('hide');
-                    displayBillingRecords(); // Refresh the billing records
-                }
-            });
+        const recordRef = billingRef.child(key);
+        recordRef.update({
+            id: id,
+            name: name,
+            date: date,
+            amount: amount,
+            paymentMethod: paymentMethod,
+            qrCode: qrCode,
+            paymentNumber: paymentNumber
+        }, function(error) {
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                $('#editModal').modal('hide');
+                displayBillingRecords(); // Refresh the billing records
+            }
         });
+    });
 
     // Function to delete billing record
     function deleteRecord(key) {
-    const recordRef = billingRef.child(key);
-    recordRef.remove()
-        .then(function() {
-            alert('Record deleted successfully!');
-            displayBillingRecords(); // Refresh the billing records
-        })
-        .catch(function(error) {
-            alert('Error: ' + error.message);
-        });
-}
+        const recordRef = billingRef.child(key);
+        recordRef.remove()
+            .then(function() {
+                alert('Record deleted successfully!');
+                displayBillingRecords(); // Refresh the billing records
+            })
+            .catch(function(error) {
+                alert('Error: ' + error.message);
+            });
+    }
+
+    // Event listener for payment method selection
+    document.getElementById('paymentMethod').addEventListener('change', function() {
+        const paymentMethod = this.value;
+        document.getElementById('qrCodeUpload').style.display = paymentMethod === 'QR Code' ? 'block' : 'none';
+        document.getElementById('paymentNumberField').style.display = paymentMethod === 'Payment Number' ? 'block' : 'none';
+    });
+
+    // Event listener for edit payment method selection
+    document.getElementById('edit-paymentMethod').addEventListener('change', function() {
+        const paymentMethod = this.value;
+        document.getElementById('edit-qrCodeUpload').style.display = paymentMethod === 'QR Code' ? 'block' : 'none';
+        document.getElementById('edit-paymentNumberField').style.display = paymentMethod === 'Payment Number' ? 'block' : 'none';
+    });
 
 </script>
-
 
 </body>
 </html>

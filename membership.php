@@ -23,7 +23,7 @@
                 <a class="nav-link" href="#">Gym Management System</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="billing.php">Billing</a>
+                <a class="nav-link" href="trainer.php">Trainer</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="gym-profiling.php">Gym Profiling</a>
