@@ -1,44 +1,3 @@
-<?php
-include 'config.php';
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['submit'])) {
-        $id = $_POST['id'];
-        $name = $_POST['name'];
-        $date = $_POST['date'];
-        $amount = $_POST['amount'];
-
-        $sql = "INSERT INTO billing (member_id, member_name, billing_date, amount) VALUES ('$id', '$name', '$date', '$amount')";
-        if ($conn->query($sql) === TRUE) {
-            echo "<div class='alert alert-success'>Record added successfully</div>";
-        } else {
-            echo "<div class='alert alert-danger'>Error: " . $sql . "<br>" . $conn->error . "</div>";
-        }
-    } elseif (isset($_POST['update'])) {
-        $id = $_POST['id'];
-        $name = $_POST['name'];
-        $date = $_POST['date'];
-        $amount = $_POST['amount'];
-        $record_id = $_POST['record_id'];
-
-        $sql = "UPDATE billing SET member_id='$id', member_name='$name', billing_date='$date', amount='$amount' WHERE id='$record_id'";
-        if ($conn->query($sql) === TRUE) {
-            echo "<div class='alert alert-success'>Record updated successfully</div>";
-        } else {
-            echo "<div class='alert alert-danger'>Error: " . $sql . "<br>" . $conn->error . "</div>";
-        }
-    } elseif (isset($_POST['delete'])) {
-        $record_id = $_POST['record_id'];
-
-        $sql = "DELETE FROM billing WHERE id='$record_id'";
-        if ($conn->query($sql) === TRUE) {
-            echo "<div class='alert alert-success'>Record deleted successfully</div>";
-        } else {
-            echo "<div class='alert alert-danger'>Error: " . $sql . "<br>" . $conn->error . "</div>";
-        }
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="admin-login.php"><img src="img/TT.png" alt="Logo"></a>
+    <a class="navbar-brand" href="admin-login.php"><img src="img/Dumb1.png" alt="Logo"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -127,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <h2 class="text-center">Billing - Gym Management System</h2>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                    <form id="billingForm">
                         <div class="form-group">
                             <label for="id">Member ID</label>
                             <input type="text" name="id" class="form-control" id="id" placeholder="Enter Member ID" required>
@@ -146,8 +105,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <input type="text" name="amount" class="form-control" id="amount" placeholder="Enter Amount" required>
                             </div>
                         </div>
-                        <button type="submit" name="submit" class="btn btn-primary btn-block">Save</button>
+                        <button type="submit" class="btn btn-primary btn-block">Save</button>
                     </form>
+                    <div id="alert"></div>
                 </div>
             </div>
         </div>
@@ -159,50 +119,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <h2 class="text-center">Billing Records</h2>
                 </div>
                 <div class="card-body">
-                    <?php
-                    // Retrieve billing records
-                    $sql = "SELECT * FROM billing";
-                    $result = $conn->query($sql);
-
-                    if ($result->num_rows > 0) {
-                        echo "<table class='table table-bordered'>";
-                        echo "<thead>";
-                        echo "<tr>";
-                        echo "<th>Member ID</th>";
-                        echo "<th>Member Name</th>";
-                        echo "<th>Billing Date</th>";
-                        echo "<th>Amount</th>";
-                        echo "<th>Actions</th>";
-                        echo "</tr>";
-                        echo "</thead>";
-                        echo "<tbody>";
-
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . $row['member_id'] . "</td>";
-                            echo "<td>" . $row['member_name'] . "</td>";
-                            echo "<td>" . $row['billing_date'] . "</td>";
-                            echo "<td>" . $row['amount'] . "</td>";
-                            echo "<td>";
-                            echo "<button class='btn btn-sm btn-warning edit-btn btn-space' data-id='" . $row['id'] . "' data-member_id='" . $row['member_id'] . "' data-member_name='" . $row['member_name'] . "' data-billing_date='" . $row['billing_date'] . "' data-amount='" . $row['amount'] . "'>Edit</button>";
-                            echo "<form method='post' action='" . $_SERVER['PHP_SELF'] . "' style='display:inline-block;'>";
-                            echo "<input type='hidden' name='record_id' value='" . $row['id'] . "'>";
-                            echo "<button type='submit' name='delete' class='btn btn-sm btn-danger btn-space'>Delete</button>";
-                            echo "</form>";
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-
-                        echo "</tbody>";
-                        echo "</table>";
-                    } else {
-                        echo "<div class='alert alert-warning'>No billing records found</div>";
-                    }
-
-                    // Close the database connection
-                    $conn->close();
-                    ?>
+                    <table class="table table-bordered" id="billingRecordsTable">
+                        <thead>
+                            <tr>
+                                <th>Member ID</th>
+                                <th>Member Name</th>
+                                <th>Billing Date</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="billingRecordsBody">
+                            <!-- Records will be populated here by JavaScript -->
+                        </tbody>
+                    </table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -214,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                <form id="editBillingForm">
                     <input type="hidden" name="record_id" id="edit-record-id">
                     <div class="form-group">
                         <label for="edit-id">Member ID</label>
@@ -234,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <input type="text" name="amount" class="form-control" id="edit-amount" required>
                         </div>
                     </div>
-                    <button type="submit" name="update" class="btn btn-primary btn-block">Update</button>
+                    <button type="submit" class="btn btn-primary btn-block">Update</button>
                 </form>
             </div>
         </div>
@@ -243,31 +179,154 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7H UibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const editButtons = document.querySelectorAll('.edit-btn');
-    editButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const id = button.getAttribute('data-id');
-            const memberId = button.getAttribute('data-member_id');
-            const memberName = button.getAttribute('data-member_name');
-            const billingDate = button.getAttribute('data-billing_date');
-            const amount = button.getAttribute('data-amount');
+<!-- Firebase JS SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
 
-            document.getElementById('edit-record-id').value = id;
-            document.getElementById('edit-id').value = memberId;
-            document.getElementById('edit-name').value = memberName;
-            document.getElementById('edit-date').value = billingDate;
+<script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+            apiKey: "AIzaSyAPNGokBic6CFHzuuENDHdJrMEn6rSE92c",
+            authDomain: "capstone40-project.firebaseapp.com",
+            databaseURL: "https://capstone40-project-default-rtdb.firebaseio.com",
+            projectId: "capstone40-project",
+            storageBucket: "capstone40-project.appspot.com",
+            messagingSenderId: "399081968589",
+            appId: "1:399081968589:web:5b502a4ebf245e817aaa84",
+            measurementId: "G-CDP5BCS8EY"
+        };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Reference your database
+    const database = firebase.database();
+    const billingRef = database.ref('billingForm');
+
+    // Function to retrieve and display billing records
+    function displayBillingRecords() {
+        billingRef.on('value', function(snapshot) {
+            const records = snapshot.val();
+            const recordsBody = document.getElementById('billingRecordsBody');
+            recordsBody.innerHTML = '';
+
+            for (const key in records) {
+                if (records.hasOwnProperty(key)) {
+                    const record = records[key];
+                    renderBillingRecord(key, record.id, record.name, record.date, record.amount);
+                }
+            }
+        });
+    }
+
+    // Call the function to initially display billing records
+    displayBillingRecords();
+
+    // Function to render a billing record row
+    function renderBillingRecord(key, id, name, date, amount) {
+        const recordsBody = document.getElementById('billingRecordsBody');
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td>${id}</td>
+            <td>${name}</td>
+            <td>${date}</td>
+            <td>${amount}</td>
+            <td>
+                <button class="btn btn-warning btn-sm btn-space" onclick="editRecord('${key}', '${id}', '${name}', '${date}', '${amount}')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteRecord('${key}')">Delete</button>
+            </td>
+        `;
+        recordsBody.appendChild(row);
+    }
+
+    // Function to save billing record
+    function saveBillingRecord(id, name, date, amount) {
+        const newBillingRef = billingRef.push();
+        newBillingRef.set({
+            id: id,
+            name: name,
+            date: date,
+            amount: amount
+        }, function(error) {
+            if (error) {
+                document.getElementById('alert').innerHTML = '<div class="alert alert-danger" role="alert">Error: ' + error.message + '</div>';
+            } else {
+                document.getElementById('alert').innerHTML = '<div class="alert alert-success" role="alert">Billing record saved successfully!</div>';
+                document.getElementById('billingForm').reset();
+                // After saving, render the new record in the table
+                renderBillingRecord(newBillingRef.key, id, name, date, amount);
+            }
+        });
+    }
+
+    // Event listener for billing form submission
+    document.getElementById('billingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const id = document.getElementById('id').value;
+        const name = document.getElementById('name').value;
+        const date = document.getElementById('date').value;
+        const amount = document.getElementById('amount').value;
+
+        saveBillingRecord(id, name, date, amount);
+    });
+
+    // Function to edit billing record
+            function editRecord(key, id, name, date, amount) {
+            document.getElementById('edit-record-id').value = key;
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-name').value = name;
+            document.getElementById('edit-date').value = date;
             document.getElementById('edit-amount').value = amount;
 
             $('#editModal').modal('show');
+        }
+
+        // Event listener for edit billing form submission
+        document.getElementById('editBillingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const key = document.getElementById('edit-record-id').value;
+            const id = document.getElementById('edit-id').value;
+            const name = document.getElementById('edit-name').value;
+            const date = document.getElementById('edit-date').value;
+            const amount = document.getElementById('edit-amount').value;
+
+            const recordRef = billingRef.child(key);
+            recordRef.update({
+                id: id,
+                name: name,
+                date: date,
+                amount: amount
+            }, function(error) {
+                if (error) {
+                    alert('Error: ' + error.message);
+                } else {
+                    $('#editModal').modal('hide');
+                    displayBillingRecords(); // Refresh the billing records
+                }
+            });
         });
-    });
-});
+
+    // Function to delete billing record
+    function deleteRecord(key) {
+    const recordRef = billingRef.child(key);
+    recordRef.remove()
+        .then(function() {
+            alert('Record deleted successfully!');
+            displayBillingRecords(); // Refresh the billing records
+        })
+        .catch(function(error) {
+            alert('Error: ' + error.message);
+        });
+}
+
 </script>
+
 
 </body>
 </html>
