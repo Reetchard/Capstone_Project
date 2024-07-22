@@ -6,54 +6,71 @@
     <title>Gym Management System</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <style>
-        .nav-item {
-            margin-right: 15px;
-        }
-        .gym-id {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: rgba(255, 255, 255, 0.7);
-            padding: 5px;
-        }
-    </style>
 </head>
+<style>
+@media (max-width: 768px) {
+    .navbar-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .navbar-menu {
+        flex-direction: column;
+        width: 100%;
+    }
+    .navbar-item {
+        width: 100%;
+        text-align: left;
+        margin: 5px 0;
+    }
+    .dropdown-content {
+        position: relative;
+        background-color: transparent;
+        box-shadow: none;
+    }
+    .dropdown-content a {
+        padding: 10px 15px;
+        background-color: #343a40;
+    }
+}
+@media (max-width: 480px) {
+    .navbar-container {
+        width: 90%;
+    }
+    .navbar-menu {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+    .navbar-item {
+        width: 100%;
+        text-align: left;
+        margin: 5px 0;
+    }
+}
+.error-message {
+    color: red;
+}
+</style>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a class="navbar-brand" href="#"><img src="img/Dumb1.png" alt="Logo"></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Gym Management System</a>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" href="#"><img src="img/Dumb1.png" alt="Logo"></a>
+            <ul class="navbar-menu">
+                <li class="navbar-item">
+                    <a class="navbar-link" href="accounts.php">Manage Account</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Gym Members</a>
+                <li class="navbar-item">
+                    <a class="navbar-link" href="member.php">Manage Services/Promotions</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Trainer</a>
+                <li class="navbar-item">
+                    <a class="navbar-link" href="gym-profiling.php">Manage Gym Profile</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Membership</a>
+                <li class="navbar-item">
+                    <a class="navbar-link" href="trainer.php">Manage Trainer Bookings</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Other
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Reservation</a>
-                        <a class="dropdown-item" href="#">Conflict Management</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Billing</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Report</a>
+                <li class="navbar-item">
+                    <a class="navbar-link" href="gym-profiling.php">Manage Products</a>
                 </li>
             </ul>
         </div>
@@ -61,33 +78,27 @@
     <!-- Navigation Bar ends -->
 
     <div class="container mt-5 pt-5">
-        <div class="row">
+        <div class="row justify-content-center">
             <!-- Form Section -->
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header bg-primary text-white text-center">
-                        <h4>Gym Profiling Registration</h4>
+                        <h4>Gym Profiling Management</h4>
                     </div>
                     <div class="card-body">
+                        <!-- Error Message -->
+                        <div id="error-message" class="error-message"></div>
                         <!-- Form start -->
                         <form id="gymForm" enctype="multipart/form-data">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="inputId">GYM ID</label>
+                                    <label for="inputId">ID</label>
                                     <input type="text" name="id" class="form-control" id="inputId" placeholder="ID">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="inputName">Gym Name</label>
+                                    <label for="inputName">Business Name</label>
                                     <input type="text" name="name" class="form-control" id="inputName" placeholder="Name">
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="inputDate">Date of Establishment</label>
-                                <input type="date" name="date" class="form-control" id="inputDate">
-                            </div>
-                            <div class="form-group">
-                                <label for="inputExperience">Experience</label>
-                                <input type="text" name="experience" class="form-control" id="inputExperience" placeholder="Experience">
                             </div>
                             <div class="form-group">
                                 <label for="inputImage">Upload Photo</label>
@@ -99,23 +110,40 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Result Section -->
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-secondary text-white text-center">
-                        <h4>Gym Details</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center">
-                            <img src="#" class="img-fluid" alt="Gym Image" id="gymImage">
-                        </div>
-                        <h5 id="gymNameDisplay">Gym Name: </h5>
-                        <p id="gymIdDisplay">Gym ID: </p>
-                        <p id="gymDateDisplay">Date of Establishment: </p>
-                        <p id="gymExperienceDisplay">Experience: </p>
-                        <div id="gymProfiles"></div>
-                    </div>
+    <!-- Gym Details Button -->
+    <div class="container mt-4 d-flex justify-content-center">
+        <button type="button" class="btn btn-info" onclick="window.open('gym_details.html', '_blank')">Show Gym Details</button>
+    </div>
+
+    <!-- Gym Details Modal -->
+    <div class="modal fade" id="gymModal" tabindex="-1" role="dialog" aria-labelledby="gymModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="gymModalLabel">Gym Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered" id="gymDetailsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Business Name</th>
+                                <th>Photo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gymDetailsBody">
+                            <!-- Gym details will be populated here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -125,8 +153,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script> <!-- Added Firebase Auth SDK -->
     <script>
-            const firebaseConfig = {
+        const firebaseConfig = {
             apiKey: "AIzaSyAPNGokBic6CFHzuuENDHdJrMEn6rSE92c",
             authDomain: "capstone40-project.firebaseapp.com",
             databaseURL: "https://capstone40-project-default-rtdb.firebaseio.com",
@@ -139,10 +168,102 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        
+
         var database = firebase.database();
         var storage = firebase.storage();
-    </script>
+        var auth = firebase.auth(); // Initialize Firebase Auth
 
+        const gymRef = database.ref('gyms');
+
+        // Function to save gym information
+        function saveGym(id, name, imageUrl) {
+            const newGymRef = gymRef.push();
+            newGymRef.set({
+                id: id,
+                name: name,
+                imageUrl: imageUrl
+            }, function(error) {
+                if (error) {
+                    alert('PeakPulse says: ' + error.message);
+                } else {
+                    alert('PeakPulse says: Gym information saved successfully!');
+                    document.getElementById('gymForm').reset();
+                    displayGymDetails();
+                }
+            });
+        }
+
+        // Function to check if the user is logged in
+        function checkUserLoggedIn() {
+            return new Promise((resolve, reject) => {
+                auth.onAuthStateChanged(function(user) {
+                    if (user) {
+                        resolve(user);
+                    } else {
+                        reject('PeakPulse says: You must be logged in to perform this action. <a href="login.html">Login first</a>');
+                    }
+                });
+            });
+        }
+
+        // Event listener for gym form submission
+        document.getElementById('gymForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            checkUserLoggedIn().then(user => {
+                const id = document.getElementById('inputId').value;
+                const name = document.getElementById('inputName').value;
+                const image = document.getElementById('inputImage').files[0];
+
+                // Upload image to Firebase Storage and save gym info
+                if (image) {
+                    const storageRef = storage.ref('gym_images/' + image.name);
+                    storageRef.put(image).then(function(snapshot) {
+                        snapshot.ref.getDownloadURL().then(function(url) {
+                            console.log('Image URL:', url);  // Log the image URL
+                            saveGym(id, name, url);
+                        }).catch(function(error) {
+                            console.error('PeakPulse says: Error getting download URL:', error);
+                        });
+                    }).catch(function(error) {
+                        console.error('PeakPulse says: Error uploading image:', error);
+                    });
+                } else {
+                    saveGym(id, name, '');
+                }
+            }).catch(errorMessage => {
+                document.getElementById('error-message').innerHTML = errorMessage;
+            });
+        });
+
+        // Function to display gym details in the modal
+        function displayGymDetails() {
+            gymRef.once('value', function(snapshot) {
+                const gyms = snapshot.val();
+                const gymDetailsBody = document.getElementById('gymDetailsBody');
+                gymDetailsBody.innerHTML = '';
+
+                for (const key in gyms) {
+                    if (gyms.hasOwnProperty(key)) {
+                        const gym = gyms[key];
+                        const row = `<tr>
+                            <td>${gym.id}</td>
+                            <td>${gym.name}</td>
+                            <td><img src="${gym.imageUrl}" alt="Gym Photo" style="width: 100px; height: auto;"/></td>
+                        </tr>`;
+                        gymDetailsBody.innerHTML += row;
+                    }
+                }
+            });
+        }
+
+        // Display gym details when the modal is opened
+        $('#gymModal').on('show.bs.modal', function () {
+            displayGymDetails();
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>

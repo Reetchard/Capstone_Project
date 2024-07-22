@@ -3,52 +3,42 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trainer Registration - Gym Management System</title>
+    <link rel="stylesheet" href="style.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
 
 <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="admin-login.php"><img src="img/Dumb1.png" alt="Logo"></a>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="#">Gym Management System</a>
+<nav class="navbar">
+    <div class="navbar-container">
+        <a class="navbar-brand" href="#"><img src="img/Dumb1.png" alt="Logo"></a>
+        <ul class="navbar-menu">
+            <li class="navbar-item">
+                <a class="navbar-link" href="accounts.php">Manage Account</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="gym-profiling.php">Gym Profiling</a>
+            <li class="navbar-item">
+                <a class="navbar-link" href="member.php">Manage Services/Promotions</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="member.php">Members</a>
+            <li class="navbar-item">
+                <a class="navbar-link" href="gym-profiling.php">Manage Gym Profile</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="membership.php">Membership</a>
+            <li class="navbar-item">
+                <a class="navbar-link" href="trainer.php">Manage Trainer Bookings</a>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Other
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="reservation.php">Reservation</a>
-                    <a class="dropdown-item" href="conflict-management.php">Conflict Management</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="billing.php">Billing</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="reports.php">Reports</a>
+            <li class="navbar-item">
+                <a class="navbar-link" href="gym-profiling.php">Manage Products</a>
             </li>
         </ul>
     </div>
 </nav>
+<!-- Navigation Bar Ends -->
 
 <!-- Trainer Registration Form -->
 <div class="container mt-4">
     <div class="card">
         <div class="card-header">
-            <h2 class="text-center">Trainer Registration</h2>
+            <h2 class="text-center">Trainer Management</h2>
         </div>
         <div class="card-body">
             <form id="trainerForm">
@@ -63,10 +53,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="date">Date of Birth</label>
-                    <input type="date" name="date" class="form-control" id="date" placeholder="Enter Date of Birth" required>
-                </div>
-                <div class="form-group">
                     <label for="experience">Experience</label>
                     <input type="text" name="experience" class="form-control" id="experience" placeholder="Enter Experience" required>
                 </div>
@@ -75,36 +61,12 @@
                     <input type="text" name="worksAt" class="form-control" id="worksAt" placeholder="Enter Gym Name" required>
                 </div>
                 <button type="submit" name="submit" class="btn btn-primary">Save</button>
+                <div id="formMessage" class="mt-3"></div>
+                <button class="btn btn-secondary mb-3" onclick="openTrainerInfo()">Edit Trainer Information</button>
             </form>
         </div>
     </div>
 </div>
-
-<!-- Trainer Information Display -->
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header">
-            <h2 class="text-center">Trainer Information</h2>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered" id="trainerInfoTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Date of Birth</th>
-                        <th>Experience</th>
-                        <th>Works At</th>
-                    </tr>
-                </thead>
-                <tbody id="trainerInfoBody">
-                    <!-- Trainer information will be populated here by JavaScript -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
 <!-- Firebase JS SDK -->
 <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
@@ -138,14 +100,14 @@
         newTrainerRef.set({
             id: id,
             name: name,
-            date: date,
             experience: experience,
             worksAt: worksAt
         }, function(error) {
+            const formMessage = document.getElementById('formMessage');
             if (error) {
-                alert('Error: ' + error.message);
+                formMessage.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
             } else {
-                alert('Trainer information saved successfully!');
+                formMessage.innerHTML = `<div class="alert alert-success">Trainer information saved successfully!</div>`;
                 document.getElementById('trainerForm').reset();
                 displayTrainerInfo();
             }
@@ -158,7 +120,6 @@
 
         const id = document.getElementById('id').value;
         const name = document.getElementById('name').value;
-        const date = document.getElementById('date').value;
         const experience = document.getElementById('experience').value;
         const worksAt = document.getElementById('worksAt').value;
 
@@ -180,7 +141,6 @@
                     row.innerHTML = `
                         <td>${trainer.id}</td>
                         <td>${trainer.name}</td>
-                        <td>${trainer.date}</td>
                         <td>${trainer.experience}</td>
                         <td>${trainer.worksAt}</td>
                     `;
@@ -189,6 +149,11 @@
                 }
             }
         });
+    }
+
+    // Function to open trainer information management page in a new tab
+    function openTrainerInfo() {
+        window.open('trainer-info.html', '_blank');
     }
 
     // Call the function to initially display trainer information
