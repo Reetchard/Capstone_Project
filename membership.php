@@ -23,13 +23,13 @@
                 <a class="nav-link" href="#">Gym Management System</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="trainer.php">Trainer</a>
+                <a class="nav-link" href="trainer.html">Trainer</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="gym-profiling.php">Gym Profiling</a>
+                <a class="nav-link" href="gym-profiling.html">Gym Profiling</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="member.php">Members</a>
+                <a class="nav-link" href="member.html">Members</a>
             </li>
             </li>
             <li class="nav-item dropdown">
@@ -37,14 +37,14 @@
             Other
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="reservation.php">Reservation</a>
-            <a class="dropdown-item" href="conflict-management.php">Conflict Management</a>
+            <a class="dropdown-item" href="reservation.html">Reservation</a>
+            <a class="dropdown-item" href="conflict-management.html">Conflict Management</a>
             </div>
             <li class="nav-item">
-                <a class="nav-link" href="billing.php">Billing</a>
+                <a class="nav-link" href="billing.html">Billing</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="reports.php">Reports</a>
+                <a class="nav-link" href="reports.html">Reports</a>
             </li>
         </ul>
     </div>

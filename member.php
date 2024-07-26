@@ -27,26 +27,26 @@ include "config.php"; // Include your database connection file
                     <a class="navbar-link" href="Dashboard.html">Gym Management System</a>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="member.php">Gym Members</a>
+                    <a class="navbar-link" href="member.html">Gym Members</a>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="trainer.php">Trainer</a>
+                    <a class="navbar-link" href="trainer.html">Trainer</a>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="membership.php">Membership</a>
+                    <a class="navbar-link" href="membership.html">Membership</a>
                 </li>
                 <li class="navbar-item dropdown">
                     <a class="navbar-link" href="#">Other</a>
                     <div class="dropdown-content">
-                        <a href="reservation.php">Reservation</a>
-                        <a href="conflict-management.php">Conflict Management</a>
+                        <a href="reservation.html">Reservation</a>
+                        <a href="conflict-management.html">Conflict Management</a>
                     </div>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="#">Billing</a>
+                    <a class="navbar-link" href="billing.html">Billing</a>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="#">Report</a>
+                    <a class="navbar-link" href="reports.html">Report</a>
                 </li>
             </ul>
         </div>
