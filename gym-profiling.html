@@ -55,22 +55,22 @@
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <a class="navbar-brand" href="#"><img src="img/Dumb1.png" alt="Logo"></a>
+            <a class="navbar-brand"><img src="img/Dumb1.png" alt="Logo"></a>
             <ul class="navbar-menu">
                 <li class="navbar-item">
-                    <a class="navbar-link" href="accounts.php">Manage Account</a>
+                    <a class="navbar-link" href="accounts.html">Manage Account</a>
                 </li>
                 <li class="navbar-item">
                     <a class="navbar-link" href="member.php">Manage Services/Promotions</a>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="gym-profiling.php">Manage Gym Profile</a>
+                    <a class="navbar-link" href="gym-profiling.html">Manage Gym Profile</a>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="trainer.php">Manage Trainer Bookings</a>
+                    <a class="navbar-link" href="trainer.html">Manage Trainer Bookings</a>
                 </li>
                 <li class="navbar-item">
-                    <a class="navbar-link" href="gym-profiling.php">Manage Products</a>
+                    <a class="navbar-link" href="gym-profiling.html">Manage Products</a>
                 </li>
             </ul>
         </div>
@@ -184,9 +184,9 @@
                 imageUrl: imageUrl
             }, function(error) {
                 if (error) {
-                    alert('PeakPulse says: ' + error.message);
+                    alert(error.message);
                 } else {
-                    alert('PeakPulse says: Gym information saved successfully!');
+                    alert('Gym information saved successfully!');
                     document.getElementById('gymForm').reset();
                     displayGymDetails();
                 }
@@ -200,7 +200,7 @@
                     if (user) {
                         resolve(user);
                     } else {
-                        reject('PeakPulse says: You must be logged in to perform this action. <a href="login.html">Login first</a>');
+                        reject('You must be logged in to perform this action. <a href="admin-login.html">Login first</a>');
                     }
                 });
             });
