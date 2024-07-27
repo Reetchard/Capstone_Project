@@ -158,13 +158,18 @@
                         <input type="email" id="email" name="email" placeholder="EMAIL">
                         <input type="password" id="password" name="pass" placeholder="PASSWORD">
                         <input type="password" id="confirmPassword" name="confirmPass" placeholder="CONFIRM PASSWORD">
+                        <select id="role" name="role">
+                            <option value="">Select Role (Optional)</option>
+                            <option value="user">User</option>
+                            <option value="gym_owner">Gym Owner</option>
+                        </select>
                         <button type="submit" class="submit">SIGN UP</button>
                         <div id="error-message" class="error-message"></div>
                         <div id="success-message" class="success-message"></div>
                         <div class="sign-up-link">
                             <p>Already have an account? <a href="admin-login.html">Login Now</a></p>
                         </div>
-                    </form>
+                    </form>                    
                 </div>
             </div>
             <div class="right">
@@ -172,16 +177,15 @@
                     <h2>PEAK PULSE</h2>
                     <h5>Booking Management</h5>
                 </div>
-                <div class="right-inductor"><img src="https://lh3.googleusercontent.com/fife/ABSRlIoGiXn2r0SBm7bjFHea6iCUOyY0N2SrvhNUT-orJfyGNRSMO2vfqar3R-xs5Z4xbeqYwrEMq2FXKGXm-l_H6QAlwCBk9uceKBfG-FjacfftM0WM_aoUC_oxRSXXYspQE3tCMHGvMBlb2K1NAdU6qWv3VAQAPdCo8VwTgdnyWv08CmeZ8hX_6Ty8FzetXYKnfXb0CTEFQOVF4p3R58LksVUd73FU6564OsrJt918LPEwqIPAPQ4dMgiH73sgLXnDndUDCdLSDHMSirr4uUaqbiWQq-X1SNdkh-3jzjhW4keeNt1TgQHSrzW3maYO3ryueQzYoMEhts8MP8HH5gs2NkCar9cr_guunglU7Zqaede4cLFhsCZWBLVHY4cKHgk8SzfH_0Rn3St2AQen9MaiT38L5QXsaq6zFMuGiT8M2Md50eS0JdRTdlWLJApbgAUqI3zltUXce-MaCrDtp_UiI6x3IR4fEZiCo0XDyoAesFjXZg9cIuSsLTiKkSAGzzledJU3crgSHjAIycQN2PH2_dBIa3ibAJLphqq6zLh0qiQn_dHh83ru2y7MgxRU85ithgjdIk3PgplREbW9_PLv5j9juYc1WXFNW9ML80UlTaC9D2rP3i80zESJJY56faKsA5GVCIFiUtc3EewSM_C0bkJSMiobIWiXFz7pMcadgZlweUdjBcjvaepHBe8wou0ZtDM9TKom0hs_nx_AKy0dnXGNWI1qftTjAg=w1920-h979-ft" alt=""></div>
+                <div class="right-inductor"><img src="https://lh3.googleusercontent.com/fife/ABSRlIoGiXn2r0SBm7bjFHea6iCUOyY0N2SrvhNUT-orJfyGNRSMO2vfqar3R-xs5Z4xbeqYwrEMq2FXKGXm-l_H6QAlwCBk9uceKBfG-FjacfftM0WM_aoUC_oxRSXXYspQE3tCMHGvMBlb2K1NAdU6qWv3VAQAPdCo8VwTgdnyWv08CmeZ8hX_6Ty8FzetXYKnfXb0CTEFQOVF4p3R58LksVUd73FU6564OsrJt918LPEwqIPAPQ4dMgiH73sgLXnDndUDCdLSDHMSirr4uUaqbiWQq-X1SNdkh-3jzjhW4keeNt1TgQHSrzW3maYO3ryueQzYoMEhts8MP8HH5gs2NkCar9cr_guunglU7Zqaede4cLFhsCZWBLVHY4cKHgk8SzfH_0Rn3St2AQen9MaiT38L5QXsaq6zFMuGiT8M2Md50eS0JdRTdlWLJApbgAUqI3zltUXce-MaCrDtp_UiI6x3IR4fEZiCo0XDyoAesFjXZg9cIuSsLTiKkSAGzzledJU3crgSHjAIycQN2PH2_dBIa3ibAJLphqq6zLh0qiQn_dHh83ru2y7MgxRU85ithgjdIk3PgplREbW9_PLv5j9juYc1WXFNW9ML80UlTaC9D2rP3i80zESJJY56faKsA5GVCIFiUtc3EewSM_C0bkJSMiobpko8O8k9q3pZ27cGplnfoh_9m2x4tzyRHsmM7Ssgs4P8QHRa9ZGeiOxydS1wCjs0X4vztZGUYx_nY0b_JpW90Z1leNUd1hwz2lksE-ppjZCSIfN4-rAeaOCTx6ZK_DlLXgfW2zRWB1OWNUWh5pjYYp4s_OWe6q8GWv6UVvUzPYUwNNXqLIMQ_t1PhxIEdD6xL8zZqGfjOw0lzG7FqtmEwYfbl9F52-8uc_AYw1Dlbv0Rbt2tJwuzkp_iT9uyXYqwy8RPSSxQW5lQ2STKn8ukbEnFqXEzFVhaEtmo68giGUVsN2v3jI1eiK4ujHb9zRrwVXzKzyssRHgFnvtU8t2w4oa9a_TQh_vF12D8lHSnJ4tRZX6OtiTK0wUnYUJ4kPC0Y1Frw_78pYkK0KwKfwnTCe0QdlICr_xPz7ck0rTTF_zq9jG6KcSZvH2Zzzg3kxVeFw8nUBhQUjVnaHRy2c2AdtCj3d6bA3szSmhw7fp91t1oD_3KiR_vIjft4iDFz_CgUEZgLO5d_FXjb2e0w7HTkA2b07V4y6U1hCBB9gNj4LHD0oSrmWdzGWw5P1B3awmaDFAF4ftdcV9r9OZGs27xh6PU4kK_F9w=s2048-no?authuser=0" alt=""></div>
             </div>
         </div>
     </section>
 
-    <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-auth.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-database.js";
     
         const firebaseConfig = {
             apiKey: "AIzaSyAPNGokBic6CFHzuuENDHdJrMEn6rSE92c",
@@ -194,70 +198,77 @@
             measurementId: "G-CDP5BCS8EY"
         };
     
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const database = getDatabase(app);
     
-        function validatePassword(password) {
-            const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_])[A-Za-z\d!@#$%^&*()_]{8,}$/;
-            return strongPasswordRegex.test(password);
+        // Get the form and error message element
+        const signupForm = document.getElementById('signupForm');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+    
+        // Function to clear messages after a delay
+        function clearMessages() {
+            setTimeout(() => {
+                errorMessage.textContent = '';
+                successMessage.textContent = '';
+            }, 5000); // 5000ms = 5 seconds
         }
     
-        document.getElementById('signupForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const email = document.getElementById('email').value.trim();
+        // Listen for form submit
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+    
+            // Get form values
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            const errorMessage = document.getElementById('error-message');
-            const successMessage = document.getElementById('success-message');
+            const role = document.getElementById('role').value || 'admin'; // Default to 'admin' if no role is selected
     
-            // Clear previous messages
-            errorMessage.textContent = '';
-            successMessage.textContent = '';
-    
-            if (username === '' || email === '' || password === '' || confirmPassword === '') {
-                errorMessage.textContent = 'PeakPulse says: Please fill all fields.';
+            // Validate form fields
+            if (!username || !email || !password || !confirmPassword) {
+                errorMessage.textContent = "Please fill in all the fields.";
+                clearMessages();
                 return;
             }
-    
             if (password !== confirmPassword) {
-                errorMessage.textContent = 'PeakPulse says: Passwords do not match.';
+                errorMessage.textContent = "Passwords do not match.";
+                clearMessages();
                 return;
             }
     
-            if (!validatePassword(password)) {
-                errorMessage.textContent = 'PeakPulse says: Password is not strong enough.';
-                return;
+            try {
+                // Create user with email and password
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                const uid = user.uid;
+    
+                // Use the 'Accounts' table for all users
+                const table = 'Accounts';
+    
+                // Save user data to the database
+                const userData = {
+                    username: username,
+                    email: email,
+                    role: role, // Save role as provided or default to 'admin'
+                };
+    
+                await set(ref(database, table + '/' + uid), userData);
+    
+                // Display success message
+                successMessage.textContent = "Sign up successful. You can now log in.";
+                errorMessage.textContent = '';  // Clear any previous error message
+                signupForm.reset();  // Reset the form
+                
+                // Clear the success message after 5 seconds
+                clearMessages();
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                clearMessages();
             }
-    
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    const isAdmin = username.toLowerCase() === 'admin';
-    
-                    set(ref(database, 'accounts/' + user.uid), {
-                        username: username,
-                        email: email,
-                        isAdmin: isAdmin,
-                        online: false // Default status when signing up
-                    })
-                    .then(() => {
-                        console.log('User signed up and data saved.');
-                        successMessage.textContent = 'PeakPulse says: Sign-up successful!';
-                        window.location.href = 'admin-login.html'; // Redirect after sign up
-                    })
-                    .catch((error) => {
-                        errorMessage.textContent = 'Error saving user data: ' + error.message;
-                        console.error('Database error:', error);
-                    });
-                })
-                .catch((error) => {
-                    errorMessage.textContent = 'Error signing up: ' + error.message;
-                    console.error('Authentication error:', error);
-                });
         });
     </script>
-    
 </body>
 </html>

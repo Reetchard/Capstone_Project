@@ -6,14 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-
 <body>
 
     <!-- Navigation Bar Starts -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand"><img src="img/Dumb1.png" alt="PeakPulse"></a>
+        <a class="navbar-brand"><img src="img/Dumb1.png" alt="PeakPulse"> PEAK PULSE </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -43,15 +42,15 @@
     <!-- Navigation Bar Ends -->
 
     <!-- Add Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-c6b6peSFAvCmMF6h1GaaMRz/wE/Blw2vGr/28d8R8AznkLL8pWNhcKfK5dxXzgxm" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
     <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-auth.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAPNGokBic6CFHzuuENDHdJrMEn6rSE92c",
@@ -64,27 +63,49 @@
             measurementId: "G-CDP5BCS8EY"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const database = getDatabase(app);
 
+        // Function to handle authentication state changes
         async function updateAuthSection(user) {
             const authSection = document.getElementById('authSection');
+            console.log('User:', user);  // Debug log
+
             if (user) {
                 try {
-                    const userRef = ref(database, 'accounts/' + user.uid);
+                    console.log('Fetching data for user:', user.uid);
+                    const userRef = ref(database, 'Accounts/' + user.uid);
                     const snapshot = await get(userRef);
 
                     if (snapshot.exists()) {
                         const userData = snapshot.val();
-                        const isAdmin = userData.role === 'Admin'; // Adjust based on your role field
+                        console.log('User data:', userData);  // Debug log
+                        const role = userData.role || 'User';
+                        const username = userData.username || 'User';
 
-                        const username = userData.username;
+                        let roleSpecificHtml = '';
+
+                        if (role === 'admin') {
+                            roleSpecificHtml = `
+                                <a class="btn btn-warning ml-3" href="accounts.html" id="adminManagement">Admin Management</a>
+                                <a class="btn btn-danger ml-3" href="#" id="logoutBtn">Log Out</a>
+                            `;
+                        } else if (role === 'gym_owner') {
+                            roleSpecificHtml = `
+                                <a class="btn btn-warning ml-3" href="gym-owner.html" id="gymOwnerManagement">Gym Owner Management</a>
+                                <a class="btn btn-danger ml-3" href="#" id="logoutBtn">Log Out</a>
+                            `;
+                        } else {
+                            roleSpecificHtml = `
+                                <a class="btn btn-danger ml-3" href="#" id="logoutBtn">Log Out</a>
+                            `;
+                        }
 
                         authSection.innerHTML = `
-                            ${isAdmin ? '<a class="btn btn-warning ml-3" href="accounts.html" id="adminManagement">Admin Management</a>' : ''}
-                            <span class="navbar-text">Welcome, ${isAdmin ? 'Admin' : username}</span>
-                            <a class="btn btn-danger ml-3" href="#" id="logoutBtn">Log Out</a>
+                            <span class="navbar-text">Greetings, ${role === 'Admin' ? 'Admin' : role === 'GymOwner' ? 'Gym Owner' : username}</span>
+                            ${roleSpecificHtml}
                         `;
 
                         const logoutBtn = document.getElementById('logoutBtn');
@@ -108,9 +129,11 @@
             }
         }
 
+        // Handle authentication state changes
         onAuthStateChanged(auth, (user) => {
             updateAuthSection(user);
         });
     </script>
+
 </body>
 </html>

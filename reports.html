@@ -4,92 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Form</title>
+    <link rel="stylesheet" href="style.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <style>
-        body {
-            background-color: #f8f9fa; /* Bootstrap default background color */
-            background: url(../Capstone/img/BG.png);
-            padding: 20px;
-            background-size: cover;
-        }
-        .container {
-            max-width: 600px;
-            background-color: #ffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        label {
-            font-weight: bold;
-        }
-        textarea {
-            resize: vertical; /* Allow vertical resizing of textarea */
-        }
-    </style>
 </head>
 <body>
     <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light bg-light fixed-top">
-    <a class="navbar-brand" href="admin-login.php"><img src="#" alt="Logo"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="Dashboard.html">Gym Management System</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="gym-profiling.html">Gym Profiling</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="trainer.html">Trainer</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="member.html">Members</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="membership.html">Membership</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Other
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="reservation.html">Reservation</a>
-                    <a class="dropdown-item" href="conflict-management.html">Conflict Management</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="billing.html">Billing</a>
-            </li>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="Dashboard.html"><img src="img/Dumb1.png" alt="Logo">PEAK PULSE</a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="accounts.html">Manage Account</a></li>
+            <li class="nav-item"><a class="nav-link" href="reports.html">Manage Reports</a></li>
         </ul>
-    </div>
-</nav>
-    <div class="container">
+    </nav>
+    <!-- Navigation Bar Ends-->
+
+    <div class="container mt-4"> 
         <h2>Report Form</h2>
-        <form id="ReportForm">
-            <div class="form-group">
-                <label for="reporter_name">Your Name:</label>
-                <input type="text" class="form-control" id="name" name="reporter_name" required>
+        <div class="row">
+            <!-- Form Section -->
+            <div class="col-md-6">
+                <form id="ReportForm">
+                    <div class="form-group">
+                        <label for="name">Your Name:</label>
+                        <input type="text" class="form-control" id="name" name="reporter_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="issue">Issue:</label>
+                        <textarea class="form-control" id="issue" name="issue" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <div id="alert"></div>
             </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+
+            <!-- Complaints Section -->
+            <div class="col-md-6">
+                <h3>Recent Complaints</h3>
+                <div id="complaintsSection" class="complaints-container">
+                    <!-- Complaints will be displayed here -->
+                </div>
             </div>
-            <div class="form-group">
-                <label for="issue">Issue:</label>
-                <textarea class="form-control" id="issue" name="issue" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        <div id="alert"></div>
+        </div>
     </div>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
@@ -138,12 +100,68 @@
 
         const saveMessages = (name, email, issue) => {
             var newReportForm = ReportFormDB.push();
+            var currentDate = new Date().toLocaleString(); // Get the current date and time
 
             newReportForm.set({
                 name: name,
                 email: email,
-                issue: issue
+                issue: issue,
+                date: currentDate,
+                reply: "" // Initialize the reply field as empty
             });
+        }
+
+        // Function to display complaints
+        ReportFormDB.on('value', (snapshot) => {
+            const complaintsSection = document.getElementById('complaintsSection');
+            complaintsSection.innerHTML = ''; // Clear existing complaints
+
+            snapshot.forEach((childSnapshot) => {
+                const data = childSnapshot.val();
+                const key = childSnapshot.key;
+                const complaintDiv = document.createElement('div');
+                complaintDiv.classList.add('complaint');
+                complaintDiv.innerHTML = `
+                    <div class="complaint-content">
+                        <strong>${data.name}</strong> (${data.date}): ${data.issue}
+                    </div>
+                    <div class="reply-container">
+                        <textarea class="form-control reply-input" rows="2" placeholder="Reply here..."></textarea>
+                        <button class="btn btn-success btn-sm mt-2 reply-btn" data-key="${key}">Send Reply</button>
+                        <div class="reply-section mt-2">
+                            ${data.reply ? `<strong>Reply:</strong> ${data.reply}` : ''}
+                        </div>
+                    </div>
+                `;
+                complaintsSection.appendChild(complaintDiv);
+            });
+
+            // Add event listener to dynamically created reply buttons
+            document.querySelectorAll('.reply-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const key = this.getAttribute('data-key');
+                    const replyText = this.previousElementSibling.value;
+                    updateReply(key, replyText);
+                });
+            });
+        });
+
+        // Function to update the reply in Firebase and remove the complaint
+        const updateReply = (key, reply) => {
+            ReportFormDB.child(key).update({ reply: reply })
+                .then(() => {
+                    // Remove the complaint from the database
+                    ReportFormDB.child(key).remove()
+                        .then(() => {
+                            console.log('Complaint removed successfully');
+                        })
+                        .catch((error) => {
+                            console.error('Error removing complaint:', error);
+                        });
+                })
+                .catch((error) => {
+                    console.error('Error updating reply:', error);
+                });
         }
     </script>
 </body>

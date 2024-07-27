@@ -115,5 +115,68 @@
         text-align: left;
         margin: 5px 0;
     }
-    
+    /* style Report */
+        .navbar {
+            margin-bottom: 20px;
+        }
+
+        .navbar-brand img {
+            max-height: 40px;
+        }
+
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        .navbar-nav .nav-item {
+            margin-left: 15px;
+        }
+
+        .container {
+            max-width: 960px;
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+        }
+
+        .complaints-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .complaint {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .complaint-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reply-container {
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+
+        .reply-input {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .reply-btn {
+            align-self: flex-end;
+        }
+
+        .reply-section {
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
 }

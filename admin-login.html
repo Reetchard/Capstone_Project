@@ -7,44 +7,44 @@
     <title>Login</title>
     <style>
         @media (max-width: 768px) {
-    .navbar-container {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .navbar-menu {
-        flex-direction: column;
-        width: 100%;
-    }
-    .navbar-item {
-        width: 100%;
-        text-align: left;
-        margin: 5px 0;
-    }
-    .dropdown-content {
-        position: relative;
-        background-color: transparent;
-        box-shadow: none;
-    }
-    .dropdown-content a {
-        padding: 10px 15px;
-        background-color: #343a40;
-    }
-}
-@media (max-width: 480px) {
-    .navbar-container {
-        width: 90%;
-    }
-    .navbar-menu {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-    }
-    .navbar-item {
-        width: 100%;
-        text-align: left;
-        margin: 5px 0;
-    }
-}
+            .navbar-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .navbar-menu {
+                flex-direction: column;
+                width: 100%;
+            }
+            .navbar-item {
+                width: 100%;
+                text-align: left;
+                margin: 5px 0;
+            }
+            .dropdown-content {
+                position: relative;
+                background-color: transparent;
+                box-shadow: none;
+            }
+            .dropdown-content a {
+                padding: 10px 15px;
+                background-color: #343a40;
+            }
+        }
+        @media (max-width: 480px) {
+            .navbar-container {
+                width: 90%;
+            }
+            .navbar-menu {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+            }
+            .navbar-item {
+                width: 100%;
+                text-align: left;
+                margin: 5px 0;
+            }
+        }
         img {
             width: 100%;
         }
@@ -247,12 +247,11 @@
     </section>
 
     <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
-    <script>
-        // Initialize Firebase
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-auth.js";
+        import { getDatabase, ref, query, orderByChild, equalTo, get } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-database.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyAPNGokBic6CFHzuuENDHdJrMEn6rSE92c",
             authDomain: "capstone40-project.firebaseapp.com",
@@ -264,16 +263,35 @@
             measurementId: "G-CDP5BCS8EY"
         };
 
-        firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
 
         function signInWithEmail(email, password, rememberMe, errorMessage) {
-            firebase.auth().setPersistence(rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION)
-                .then(() => {
-                    return firebase.auth().signInWithEmailAndPassword(email, password);
-                })
+            setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence)
+                .then(() => signInWithEmailAndPassword(auth, email, password))
                 .then((userCredential) => {
                     // Signed in
-                    window.location.href = "Dashboard.html";
+                    // Fetch user role from the database and redirect accordingly
+                    const user = userCredential.user;
+                    const userId = user.uid;
+                    const userRef = ref(database, 'accounts/' + userId);
+                    get(userRef).then((snapshot) => {
+                        if (snapshot.exists()) {
+                            const userData = snapshot.val();
+                            const role = userData.role || 'user'; // Default to 'user' if no role is found
+                            if (role === 'admin') {
+                                window.location.href = "Dashboard.html";
+                            } else if (role === 'gymowner') {
+                                window.location.href = "Dashboard.html";
+                            } else {
+                                window.location.href = "Dashboard.html";
+                            }
+                        } else {
+                            window.location.href = "Dashboard.html"; // Default role redirection
+                        }
+                    });
                 })
                 .catch((error) => {
                     console.error("SignIn Error:", error.code, error.message);
@@ -292,7 +310,7 @@
             errorMessage.textContent = '';
 
             if (username === '' || password === '') {
-                errorMessage.textContent = 'PeakPulse says: Please enter both username and password.';
+                errorMessage.textContent = 'Please enter both username and password.';
                 return;
             }
 
@@ -301,26 +319,29 @@
                 signInWithEmail(username, password, rememberMe, errorMessage);
             } else {
                 // Attempt login with username
-                firebase.database().ref('accounts').orderByChild('username').equalTo(username).once('value')
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        snapshot.forEach((childSnapshot) => {
-                            const userData = childSnapshot.val();
-                            const email = userData.email;
-                            if (email) {
-                                signInWithEmail(email, password, rememberMe, errorMessage);
-                            } else {
-                                errorMessage.textContent = 'PeakPulse says: No email associated with this username.';
-                            }
-                        });
-                    } else {
-                        errorMessage.textContent = 'PeakPulse says: Invalid username or email.';
-                    }
-                })
-                .catch((error) => {
-                    console.error("Database Error:", error.code, error.message);
-                    errorMessage.textContent = 'PeakPulse says: Database error: ' + error.message;
-                });
+                const accountsRef = ref(database, 'Accounts');
+                const queryRef = query(accountsRef, orderByChild('username'), equalTo(username));
+
+                get(queryRef)
+                    .then((snapshot) => {
+                        if (snapshot.exists()) {
+                            snapshot.forEach((childSnapshot) => {
+                                const userData = childSnapshot.val();
+                                const email = userData.email;
+                                if (email) {
+                                    signInWithEmail(email, password, rememberMe, errorMessage);
+                                } else {
+                                    errorMessage.textContent = 'No email associated with this username.';
+                                }
+                            });
+                        } else {
+                            errorMessage.textContent = 'Invalid username or email.';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(error.code, error.message);
+                        errorMessage.textContent = error.message;
+                    });
             }
         });
 
@@ -329,6 +350,8 @@
             event.preventDefault();
             window.location.href = "signup.html";
         });
+
     </script>
+    
 </body>
 </html>
