@@ -185,7 +185,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-auth.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-database.js";
+        import { getDatabase, ref, set, get, runTransaction } from "https://www.gstatic.com/firebasejs/9.2.0/firebase-database.js";
     
         const firebaseConfig = {
             apiKey: "AIzaSyAPNGokBic6CFHzuuENDHdJrMEn6rSE92c",
@@ -214,6 +214,33 @@
                 errorMessage.textContent = '';
                 successMessage.textContent = '';
             }, 5000); // 5000ms = 5 seconds
+        }
+    
+        // Function to get the next ID for a given role using transaction
+        async function getNextId(role) {
+            const idRef = ref(database, `RoleIds/${role}`);
+            
+            try {
+                // Run a transaction to ensure ID is incremented atomically
+                const updatedId = await runTransaction(idRef, (currentId) => {
+                    if (currentId === null) {
+                        return 0; // Start with ID 1 if no ID exists
+                    } else {
+                        return currentId + 1; // Increment ID
+                    }
+                });
+
+                // Check if the transaction was successful
+                if (updatedId.committed) {
+                    console.log(`Next ID for ${role}: ${updatedId.snapshot.val()}`);
+                    return updatedId.snapshot.val();
+                } else {
+                    throw new Error("Transaction was not committed.");
+                }
+            } catch (error) {
+                console.error("Error updating ID:", error);
+                throw new Error("Failed to get next ID.");
+            }
         }
     
         // Listen for form submit
@@ -245,23 +272,24 @@
                 const user = userCredential.user;
                 const uid = user.uid;
     
-                // Use the 'Accounts' table for all users
-                const table = 'Accounts';
+                // Get the next ID for the role
+                const nextId = await getNextId(role);
     
                 // Save user data to the database
                 const userData = {
+                    id: nextId,
                     username: username,
                     email: email,
                     role: role, // Save role as provided or default to 'admin'
                 };
     
-                await set(ref(database, table + '/' + uid), userData);
+                await set(ref(database, 'Accounts/' + uid), userData);
     
                 // Display success message
                 successMessage.textContent = "Sign up successful. You can now log in.";
                 errorMessage.textContent = '';  // Clear any previous error message
                 signupForm.reset();  // Reset the form
-                
+    
                 // Clear the success message after 5 seconds
                 clearMessages();
             } catch (error) {
@@ -270,5 +298,6 @@
             }
         });
     </script>
+    
 </body>
 </html>

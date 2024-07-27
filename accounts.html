@@ -27,13 +27,14 @@
             <div class="form-inline">
                 <input type="text" id="searchAccountId" class="form-control mr-2" placeholder="Search by ID">
                 <button class="btn btn-primary" onclick="searchAccount()">Search</button>
-                <button class="btn btn-success ml-auto" data-toggle="modal" data-target="#accountModal">Add Account</button>
+                <button class="btn btn-danger ml-auto" onclick="deleteSelected()">Delete All</button>
             </div>
         </div>
         <div class="card-body">
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"></th>
                         <th>ID</th>
                         <th>Username</th>
                         <th>Status</th>
@@ -53,7 +54,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="accountModalLabel">Add/Edit Account</h5>
+                <h5 class="modal-title" id="accountModalLabel">Update Account</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -130,12 +131,12 @@
                                 : `Offline (Last: ${new Date(account.lastOnline).toLocaleString()})`;
 
                             row.innerHTML = `
+                                <td><input type="checkbox" class="selectAccount" value="${key}"></td>
                                 <td>${account.id || 'N/A'}</td>
                                 <td>${account.username || 'N/A'}</td>
                                 <td>${status || 'N/A'}</td>
                                 <td>
-                                    <button class="btn btn-warning btn-sm" onclick="editAccount('${key}')">Edit</button>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteAccount('${key}')">Delete</button>
+                                    <button class="btn btn-warning btn-sm" onclick="editAccount('${key}')">Edit</button>    
                                 </td>
                             `;
 
@@ -143,7 +144,7 @@
                         }
                     }
                 } else {
-                    accountInfoBody.innerHTML = '<tr><td colspan="4">No accounts found.</td></tr>';
+                    accountInfoBody.innerHTML = '<tr><td colspan="5">No accounts found.</td></tr>';
                 }
             }).catch(error => {
                 console.error('Error fetching data:', error);
@@ -234,6 +235,35 @@
                     console.error('Error deleting account:', error);
                 });
             }
+        };
+
+        // Function to delete selected accounts
+        window.deleteSelected = function() {
+            const selectedCheckboxes = document.querySelectorAll('.selectAccount:checked');
+            if (selectedCheckboxes.length === 0) {
+                alert('Please select at least one account to delete.');
+                return;
+            }
+
+            if (confirm('Are you sure you want to delete the selected accounts?')) {
+                selectedCheckboxes.forEach(checkbox => {
+                    const key = checkbox.value;
+                    accountRef.child(key).remove().catch(error => {
+                        console.error('Error deleting account:', error);
+                    });
+                });
+
+                // Refresh the account list after deletion
+                displayAccountInfo();
+            }
+        };
+
+        // Function to toggle all checkboxes
+        window.toggleSelectAll = function(source) {
+            const checkboxes = document.querySelectorAll('.selectAccount');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = source.checked;
+            });
         };
 
         // Display account information on page load
