@@ -94,10 +94,15 @@
                             `;
                         } else if (role === 'gym_owner') {
                             roleSpecificHtml = `
-                                <a class="btn btn-warning ml-3" href="gym-owner.html" id="gymOwnerManagement">Gym Owner Management</a>
+                                <a class="btn btn-warning ml-3" href="GymOwner/gym-profiling.html" id="gymOwnerManagement">Gym Owner Management</a>
                                 <a class="btn btn-danger ml-3" href="#" id="logoutBtn">Log Out</a>
                             `;
-                        } else {
+                        }else if (role == 'trainer'){
+                            roleSpecificHtml = `
+                            <a class="btn btn-warning ml-3" href="reservation.html" id="TrainerManagement">Trainer Management</a>
+                            <a class="btn btn-danger ml-3" href="#" id="logoutBtn">Log Out</a>
+                        `}
+                        else {
                             roleSpecificHtml = `
                                 <a class="btn btn-danger ml-3" href="#" id="logoutBtn">Log Out</a>
                             `;
@@ -125,7 +130,7 @@
                     console.error('Error fetching user data:', error);
                 }
             } else {
-                authSection.innerHTML = `<a class="btn btn-primary" href="admin-login.html">Log In</a>`;
+                authSection.innerHTML = `<a class="btn btn-primary" href="login.html">Log In</a>`;
             }
         }
 

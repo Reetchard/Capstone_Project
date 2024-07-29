@@ -276,7 +276,7 @@
                     // Fetch user role from the database and redirect accordingly
                     const user = userCredential.user;
                     const userId = user.uid;
-                    const userRef = ref(database, 'accounts/' + userId);
+                    const userRef = ref(database, 'Accounts/' + userId);
                     get(userRef).then((snapshot) => {
                         if (snapshot.exists()) {
                             const userData = snapshot.val();

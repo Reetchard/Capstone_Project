@@ -7,62 +7,73 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
-        body {
-            padding-top: 20px;
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: opacity 1s ease-out, height 1s ease-out;
         }
-        table img {
-            width: 100px;
+
+        .error-message.visible {
+            opacity: 1;
             height: auto;
         }
-        .search-container {
-            display: flex;
-            align-items: center;
-        }
-        .search-container input {
-            margin-right: 10px;
-            flex: 1; /* Allow input to take available space */
-        }
-        .search-container button {
-            margin-left: 10px;
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        .form-group.disabled input {
-            background-color: #e9ecef;
-            cursor: not-allowed;
+
+        .error-message.hidden {
+            opacity: 0;
+            height: 0;
         }
         .error-message {
-            color: red;
-            margin-top: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            opacity: 0; /* Hidden initially */
+            height: 0; /* Hidden initially */
+            overflow: hidden; /* Prevent overflow when hidden */
+            transition: opacity 1s ease-out, height 1s ease-out; /* Smooth transition for opacity and height */
         }
+        
+        .error-message.visible {
+            opacity: 1; /* Fully visible */
+            height: auto; /* Auto height when visible */
+        }
+        
     </style>
 </head>
+
 <body>
     <div class="container">
+        <!-- Error Message -->
+        <div class="error-message hidden" id="errorMessage"></div>
+
         <h1 class="text-center mb-4">Gym Details</h1>
-        
+
         <!-- Search Form -->
         <div class="mb-4">
             <h3>Search Gyms</h3>
             <div class="search-container">
                 <div class="form-group">
-                    <label for="searchId">Gym ID</label>
-                    <input type="text" class="form-control" id="searchId" placeholder="Search by Gym ID" />
+                    <label for="searchId">ID</label>
+                    <input type="text" class="form-control" id="searchId" placeholder="Search by ID" />
                 </div>
                 <button type="button" class="btn btn-primary" id="searchButton">Search</button>
             </div>
         </div>
-        
+
         <!-- Gym Form -->
         <div class="mb-4">
             <h3>Add/Edit Gym</h3>
             <form id="gymForm">
-                <input type="hidden" id="gymKey" /> <!-- Changed gymId to gymKey for unique key -->
-                <div class="form-group">
-                    <label for="gymIdField">Gym ID</label>
-                    <input type="text" class="form-control" id="gymIdField" required />
-                </div>
+                <input type="hidden" id="gymKey" />
                 <div class="form-group">
                     <label for="gymName">Gym Name</label>
                     <input type="text" class="form-control" id="gymName" required />
@@ -71,26 +82,34 @@
                     <label for="gymPhoto">Gym Photo</label>
                     <input type="file" class="form-control" id="gymPhoto" />
                 </div>
+                <img id="gymPhotoPreview" src="" alt="Gym Photo" width="100" style="display: none;"/>
                 <button type="submit" class="btn btn-primary" id="gymFormSubmit">Add Gym</button>
                 <button type="button" class="btn btn-secondary" id="cancelEdit">Cancel</button>
-                <div class="error-message" id="errorMessage"></div>
             </form>
         </div>
-        
+
         <!-- Gym Table -->
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Business Name</th>
-                    <th>Photo</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="gymDetailsBody">
-                <!-- Gym details will be populated here by JavaScript -->
-            </tbody>
-        </table>
+        <div class="mb-4">
+            <h3>Gyms List</h3>
+            <div class="form-group">
+                <input type="checkbox" id="selectAllCheckbox" /> <label for="selectAllCheckbox">Select All</label>
+                <button type="button" class="btn btn-danger" id="deleteSelectedButton">Delete All</button>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>ID</th>
+                        <th>Business Name</th>
+                        <th>Photo</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="gymDetailsBody">
+                    <!-- Gym details will be populated here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Firebase SDK and Configuration -->
@@ -108,139 +127,237 @@
             appId: "1:399081968589:web:5b502a4ebf245e817aaa84",
             measurementId: "G-CDP5BCS8EY"
         };
-
+        
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const storage = firebase.storage();
-
+        
         const gymRef = database.ref('gyms');
-
-        function displayGymDetails(searchId = '') {
+        
+        function displayGymDetails(gyms) {
+            const gymDetailsBody = document.getElementById('gymDetailsBody');
+            gymDetailsBody.innerHTML = '';
+        
+            for (const key in gyms) {
+                if (gyms.hasOwnProperty(key)) {
+                    const gym = gyms[key];
+                    const row = `
+                        <tr>
+                            <td><input type="checkbox" class="gym-checkbox" data-key="${key}"/></td>
+                            <td>${gym.id}</td>
+                            <td>${gym.name}</td>
+                            <td><img src="${gym.imageUrl}" alt="Gym Photo" width="100"/></td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick="editGym('${key}')">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteGym('${key}')">Delete</button>
+                            </td>
+                        </tr>`;
+                    gymDetailsBody.innerHTML += row;
+                }
+            }
+        }
+        
+        function loadGymDetails() {
             gymRef.once('value', function(snapshot) {
                 const gyms = snapshot.val();
-                const gymDetailsBody = document.getElementById('gymDetailsBody');
-                gymDetailsBody.innerHTML = '';
-
-                for (const key in gyms) {
-                    if (gyms.hasOwnProperty(key)) {
-                        const gym = gyms[key];
-
-                        // Filter based on search criteria
-                        if (searchId && gym.id !== searchId) {
-                            continue;
-                        }
-
-                        const row = `
-                            <tr>
-                                <td>${gym.id}</td>
-                                <td>${gym.name}</td>
-                                <td><img src="${gym.imageUrl}" alt="Gym Photo"/></td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm" onclick="editGym('${key}')">Edit</button>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteGym('${key}')">Delete</button>
-                                </td>
-                            </tr>`;
-                        gymDetailsBody.innerHTML += row;
-                    }
-                }
-            });
+                displayGymDetails(gyms);
+            }).catch(error => showError("Failed to load gym details: " + error.message));
         }
-
+        
         // Load gym details when the page loads
         window.onload = function() {
-            displayGymDetails();
+            loadGymDetails();
         };
-
+    
+        // Search Gym by ID
+        document.getElementById('searchButton').addEventListener('click', function() {
+            const searchId = document.getElementById('searchId').value.trim();
+            if (searchId) {
+                gymRef.orderByChild('id').equalTo(parseInt(searchId, 10)).once('value', function(snapshot) {
+                    const gyms = snapshot.val();
+                    if (gyms) {
+                        displayGymDetails(gyms);
+                        showError("Gym found.");
+                    } else {
+                        displayGymDetails({});
+                        showError("No gyms found with the given ID.");
+                    }
+                }).catch(error => showError("Search failed: " + error.message));
+            } else {
+                loadGymDetails();
+            }
+        });
+    
         // Add/Edit Gym
         const gymForm = document.getElementById('gymForm');
         const gymFormSubmit = document.getElementById('gymFormSubmit');
         const cancelEdit = document.getElementById('cancelEdit');
         const errorMessage = document.getElementById('errorMessage');
-
+        const gymPhotoPreview = document.getElementById('gymPhotoPreview');
+        
         gymForm.addEventListener('submit', function(e) {
             e.preventDefault();
-
+        
             const gymKey = document.getElementById('gymKey').value;
-            const gymId = document.getElementById('gymIdField').value;
             const gymName = document.getElementById('gymName').value;
             const gymPhoto = document.getElementById('gymPhoto').files[0];
-
-            if (!gymId || !gymName) {
-                showError("Gym ID and Name are required.");
+        
+            if (!gymName) {
+                showError("Gym Name is required.");
                 return;
             }
-
-            const gymData = {
-                id: gymId,
-                name: gymName
-            };
-
-            if (gymPhoto) {
-                const storageRef = storage.ref('gym_photos/' + gymPhoto.name);
-                storageRef.put(gymPhoto).then(() => {
-                    storageRef.getDownloadURL().then((url) => {
-                        gymData.imageUrl = url;
-                        saveGymData(gymKey, gymData);
-                    }).catch(showError);
-                }).catch(showError);
+        
+            if (gymKey) {
+                // Edit existing gym
+                const gymData = { name: gymName };
+                if (gymPhoto) {
+                    const storageRef = storage.ref('gym_photos/' + gymPhoto.name);
+                    storageRef.put(gymPhoto).then(() => {
+                        storageRef.getDownloadURL().then((url) => {
+                            gymData.imageUrl = url;
+                            saveGymData(gymKey, gymData); // Update gym
+                            showError("Gym updated successfully.");
+                        }).catch(error => showError("Failed to get photo URL: " + error.message));
+                    }).catch(error => showError("Failed to upload photo: " + error.message));
+                } else {
+                    saveGymData(gymKey, gymData); // Update gym without new photo
+                    showError("Gym updated successfully.");
+                }
             } else {
-                saveGymData(gymKey, gymData);
+                // Add new gym
+                getMaxGymId(function(maxId) {
+                    const gymId = maxId + 1; // Increment ID
+                    const gymData = {
+                        id: gymId,
+                        name: gymName
+                    };
+        
+                    if (gymPhoto) {
+                        const storageRef = storage.ref('gym_photos/' + gymPhoto.name);
+                        storageRef.put(gymPhoto).then(() => {
+                            storageRef.getDownloadURL().then((url) => {
+                                gymData.imageUrl = url;
+                                saveGymData(gymId, gymData); // Add new gym
+                                showError("New gym added successfully.");
+                            }).catch(error => showError("Failed to get photo URL: " + error.message));
+                        }).catch(error => showError("Failed to upload photo: " + error.message));
+                    } else {
+                        saveGymData(gymId, gymData); // Add new gym without photo
+                        showError("New gym added successfully.");
+                    }
+                }).catch(error => showError("Failed to get max gym ID: " + error.message));
             }
         });
-
+        
         function saveGymData(gymKey, gymData) {
             if (gymKey) {
                 // Update Gym
                 gymRef.child(gymKey).update(gymData).then(() => {
                     resetForm();
-                    displayGymDetails(); // Refresh the gym details list
-                }).catch(showError);
+                    loadGymDetails(); // Refresh the gym details list
+                }).catch(error => showError("Failed to update gym: " + error.message));
             } else {
                 // Add Gym
                 gymRef.child(gymData.id).set(gymData).then(() => {
                     resetForm();
-                    displayGymDetails(); // Refresh the gym details list
-                }).catch(showError);
+                    loadGymDetails(); // Refresh the gym details list
+                }).catch(error => showError("Failed to add gym: " + error.message));
             }
         }
-
+        
         function editGym(key) {
             const gym = database.ref('gyms/' + key);
             gym.once('value').then(function(snapshot) {
                 const gymData = snapshot.val();
-                document.getElementById('gymKey').value = key; // Set the gym key for update
-                document.getElementById('gymIdField').value = gymData.id;
                 document.getElementById('gymName').value = gymData.name;
+                document.getElementById('gymKey').value = key;
                 document.getElementById('gymFormSubmit').innerText = 'Update Gym';
-            }).catch(showError);
+        
+                if (gymData.imageUrl) {
+                    gymPhotoPreview.src = gymData.imageUrl;
+                    gymPhotoPreview.style.display = 'block';
+                } else {
+                    gymPhotoPreview.style.display = 'none';
+                }
+                showError("Gym loaded for editing.");
+            }).catch(error => showError("Failed to load gym for editing: " + error.message));
         }
-
+        
         function deleteGym(key) {
             database.ref('gyms/' + key).remove().then(() => {
-                displayGymDetails(); // Refresh the gym details list
-            }).catch(showError);
+                loadGymDetails(); // Refresh the gym details list
+                showError("Gym deleted successfully.");
+            }).catch(error => showError("Failed to delete gym: " + error.message));
         }
-
+        
+        function deleteSelectedGyms() {
+            const selectedCheckboxes = document.querySelectorAll('.gym-checkbox:checked');
+            if (selectedCheckboxes.length === 0) {
+                showError("No gyms selected for deletion.");
+                return;
+            }
+            selectedCheckboxes.forEach(checkbox => {
+                const gymKey = checkbox.getAttribute('data-key');
+                deleteGym(gymKey);
+            });
+        }
+        
         function resetForm() {
             gymForm.reset();
-            document.getElementById('gymKey').value = ''; // Clear gymKey field
             document.getElementById('gymFormSubmit').innerText = 'Add Gym';
             errorMessage.innerText = ''; // Clear any existing error messages
+            errorMessage.classList.add('hidden'); // Hide the error message
+            gymPhotoPreview.style.display = 'none'; // Hide photo preview
+            document.getElementById('gymKey').value = ''; // Clear the gym key
         }
-
+        
         function showError(message) {
             errorMessage.innerText = message;
+            errorMessage.classList.remove('hidden');
+            errorMessage.classList.add('visible');
+            
+            // Fade out after 4 seconds
+            setTimeout(() => {
+                errorMessage.classList.remove('visible');
+                errorMessage.classList.add('hidden');
+            }, 4000); // Message stays visible for 4 seconds
         }
 
         cancelEdit.addEventListener('click', resetForm);
-
-        // Search functionality
-        document.getElementById('searchButton').addEventListener('click', function() {
-            const searchId = document.getElementById('searchId').value.trim();
-            displayGymDetails(searchId);
+    
+        // Select/Deselect All Checkboxes
+        document.getElementById('selectAllCheckbox').addEventListener('change', function() {
+            const isChecked = this.checked;
+            const checkboxes = document.querySelectorAll('.gym-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
         });
+    
+        // Delete Selected Gyms
+        document.getElementById('deleteSelectedButton').addEventListener('click', deleteSelectedGyms);
+        
+        function getMaxGymId(callback) {
+            gymRef.once('value', function(snapshot) {
+                const gyms = snapshot.val();
+                let maxId = 0;
+    
+                for (const key in gyms) {
+                    if (gyms.hasOwnProperty(key)) {
+                        const gym = gyms[key];
+                        if (gym.id > maxId) {
+                            maxId = gym.id;
+                        }
+                    }
+                }
+    
+                callback(maxId);
+            }).catch(error => showError("Failed to get max gym ID: " + error.message));
+        }
+    
     </script>
+    
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
